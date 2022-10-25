@@ -92,5 +92,12 @@ insert into persons(first_name, second_name) values('petr', 'petrov');
 commit;
 ```
 
+
 ![image](https://user-images.githubusercontent.com/85208391/197896629-e8df8556-bc18-4e51-84b1-230e18bd7b4f.png)
+
+
+- Смотрю текущий уровень изоляции:
+```
+show transaction isolation level;
+```
 
