@@ -42,7 +42,8 @@ gcloud compute instances list
 ```
 ![image](https://user-images.githubusercontent.com/85208391/197828060-be5dd53c-563c-4b9f-a0a4-df7af81cd584.png)
 
+![image](https://user-images.githubusercontent.com/85208391/197829735-ce18c323-03bd-446f-b664-6bdfbd40b7ce.png)
 
-![image](https://user-images.githubusercontent.com/85208391/197829411-2bc08694-f687-47fe-85b2-d118cc8dd6fb.png)
+
 
    
