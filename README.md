@@ -70,7 +70,8 @@ gcloud compute os-login ssh-keys add \
   sudo apt-get update
   sudo apt update && sudo apt upgrade -y && sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - && sudo apt-get update && sudo apt-get -y install postgresql-14
   ```
-  
+- Установка успешно завершена
+
   ![image](https://user-images.githubusercontent.com/85208391/197893150-3954412e-6089-487d-a311-c9e5f609115c.png)
 
   
