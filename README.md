@@ -17,14 +17,6 @@ _Создаю инстанс виртуальной машины с дефолт
 
    ![image](https://user-images.githubusercontent.com/85208391/197797886-41b9cbfb-6482-4e46-9d26-842c6fcd290d.png)
 
-_Добавляю свой ssh ключ в metadata ВМ_
-  ![image](https://user-images.githubusercontent.com/85208391/197812402-b73475fa-bf68-4a59-a022-1f09da1ad30a.png)
-
-
-
-
-![image](https://user-images.githubusercontent.com/85208391/197820056-ac09c909-f9a1-47f1-9e41-92de3ccf5236.png)
-
 ___
 ## Установка Google Cloud и подключения
 _В данном случае я ипользую OS Linux mint соответственно я буду разворачивать  вданной системе, данный процесс разделил на этапы_
@@ -48,7 +40,9 @@ _Ввожу следующую команду_
 ```
 gcloud compute instances list
 ```
+![image](https://user-images.githubusercontent.com/85208391/197828060-be5dd53c-563c-4b9f-a0a4-df7af81cd584.png)
 
 
+![image](https://user-images.githubusercontent.com/85208391/197829411-2bc08694-f687-47fe-85b2-d118cc8dd6fb.png)
 
    
