@@ -6,6 +6,7 @@
 
 * __Решение:__
 
+![image](https://user-images.githubusercontent.com/85208391/197786874-6757f6c0-f46c-49e5-90e9-956f616e832b.png)
 
 
 
