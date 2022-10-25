@@ -48,3 +48,6 @@ _выходные данные:_
 gcloud compute ssh pgnode-1
 ```
 ![image](https://user-images.githubusercontent.com/85208391/197829735-ce18c323-03bd-446f-b664-6bdfbd40b7ce.png)
+
+![image](https://user-images.githubusercontent.com/85208391/197832445-cb9b0d8d-9f25-4e32-bc66-14b42f646bf8.png)
+
