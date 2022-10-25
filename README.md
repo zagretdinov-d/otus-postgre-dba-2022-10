@@ -13,8 +13,8 @@
 ![image](https://user-images.githubusercontent.com/85208391/197787063-a6b31e59-ec8c-4f84-afd2-3c3124d40a90.png)
 
 _Создаю инстанс виртуальной машины с дефолтными параметрами_
-  * VM instances > Create an instance 
-  
+  * VM instances > Create an instance
+
    ![image](https://user-images.githubusercontent.com/85208391/197797886-41b9cbfb-6482-4e46-9d26-842c6fcd290d.png)
 
-
+_Добавляю свой ssh ключ в metadata ВМ_
