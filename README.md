@@ -26,6 +26,7 @@ _В данном случае я ипользую OS Linux mint соответс
  wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
  tar -zxvf google-cloud-sdk.tar.gz
  bash google-cloud-sdk/install.sh
+ sudo snap install google-cloud-sdk --classic
 ```
 _чтобы обновить $PATH и включить завершение bash? ( Т/и ) ? у
 далее нажимаю enter_
