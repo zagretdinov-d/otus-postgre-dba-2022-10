@@ -53,7 +53,7 @@ gcloud compute ssh pgnode-1
 _В результате получаем успешно добавленный ключ в облаке_
 ![image](https://user-images.githubusercontent.com/85208391/197832445-cb9b0d8d-9f25-4e32-bc66-14b42f646bf8.png)
 
-_Создаю ssh-add следующим образом_
+_Так же ssh-add можно выполнить следующим образом_
 ```
 gcloud compute os-login ssh-keys add \
 --key-file=.ssh/id_rsa.pub \
