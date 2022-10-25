@@ -75,5 +75,21 @@ gcloud compute os-login ssh-keys add \
 
   ![image](https://user-images.githubusercontent.com/85208391/197893150-3954412e-6089-487d-a311-c9e5f609115c.png)
 
+-  Подключаюсь по ssh к двум сессиям и запускаю везде psql из под пользователя postgres
+
   ![image](https://user-images.githubusercontent.com/85208391/197894257-ea6e9fce-356b-4a19-b030-be7fe48326b6.png)
+
+- Отключаю auto commit
+```
+\set AUTOCOMMIT OFF
+\echo :AUTOCOMMIT
+```
+- Согласно заданию создана новая таблица и добавлены следующие записи в первой сессии:
+```
+create table persons(id serial, first_name text, second_name text); 
+insert into persons(first_name, second_name) values('ivan', 'ivanov'); 
+insert into persons(first_name, second_name) values('petr', 'petrov'); 
+commit;
+```
+
 
