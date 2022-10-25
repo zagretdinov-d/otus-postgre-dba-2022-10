@@ -18,3 +18,4 @@ _Создаю инстанс виртуальной машины с дефолт
    ![image](https://user-images.githubusercontent.com/85208391/197797886-41b9cbfb-6482-4e46-9d26-842c6fcd290d.png)
 
 _Добавляю свой ssh ключ в metadata ВМ_
+![image](https://user-images.githubusercontent.com/85208391/197812402-b73475fa-bf68-4a59-a022-1f09da1ad30a.png)
