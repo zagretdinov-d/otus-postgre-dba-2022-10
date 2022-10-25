@@ -5,6 +5,9 @@
     * научиться управлять уровнем изоляции транзакций в PostgreSQL и понимать особенность работы уровней read commited и repeatable read
 
 * __Решение:__
+ _Создание проекта в Google Cloud Platform_
+  *    В консоли Google Cloud menu > IAM и администратор > Создать проект;
+  *    В поле «Имя проекта» я ввел pg-devops и дату рождения, жму создать;
 
 ![image](https://user-images.githubusercontent.com/85208391/197787063-a6b31e59-ec8c-4f84-afd2-3c3124d40a90.png)
 
