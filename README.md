@@ -13,7 +13,5 @@
 
 _Создаю инстанс виртуальной машины с дефолтными параметрами_
 
-
-
 ![image](https://user-images.githubusercontent.com/85208391/197797886-41b9cbfb-6482-4e46-9d26-842c6fcd290d.png)
 
