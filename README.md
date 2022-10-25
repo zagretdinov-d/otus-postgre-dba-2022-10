@@ -60,6 +60,7 @@ gcloud compute os-login ssh-keys add \
 --project=pg-devops1988-10
 ```
 - Проваливаюсь по SSH соединению:
+
 ![image](https://user-images.githubusercontent.com/85208391/197837031-af6add55-d063-4781-90e1-970469566a0d.png)
 ---
 ## Установка PostgreSQL
