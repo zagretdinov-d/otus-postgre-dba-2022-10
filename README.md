@@ -100,4 +100,7 @@ commit;
 ```
 show transaction isolation level;
 ```
+![image](https://user-images.githubusercontent.com/85208391/197898565-ecbb1e51-2f7a-4d86-a733-0386a5d674ad.png)
+
+
 
