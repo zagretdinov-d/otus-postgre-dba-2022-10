@@ -112,5 +112,6 @@ show transaction isolation level;
     * На второй сессии
     ``` select * from persons; ```
 * При выполнения запроса новая запись не была добавлена.
- 
+ ![image](https://user-images.githubusercontent.com/85208391/197907638-c3d91757-b345-4c43-bbe6-64811435bcc3.png)
+
 
