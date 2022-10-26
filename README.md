@@ -127,8 +127,13 @@ show transaction isolation level;
 
   * завершаю транзакцию на второй сессии
 
-
+* __Транзакция Repeatable Read__
+  * Создаю новую транзакцию на обоих сессиях ```BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;```
+  * В первой сессии добавляю новую запись ```insert into persons(first_name, second_name) values('sveta', 'svetova');```
+  * делаю persons во второй сессии ```select * from persons```
   
+
+
 
 
    
