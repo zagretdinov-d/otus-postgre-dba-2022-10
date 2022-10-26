@@ -1,4 +1,6 @@
+#!/bin/bash
 echo "Установка до последней версии"
+echo "______________________________"
 echo "Обновление до последней версии"
 sudo apt update && sudo apt upgrade -y -q
 echo "добавляем репозитории последней версии"
@@ -9,5 +11,3 @@ sudo apt update && sudo apt upgrade -y && sudo sh -c 'echo "deb http://apt.postg
 
 # sudo pg_ctlscluster 15 main stop //останавливает кластер
 # sudo pg_createcluster 15 main2 //Создание нового кластера
-
-

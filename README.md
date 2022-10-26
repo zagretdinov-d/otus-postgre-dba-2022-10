@@ -141,15 +141,23 @@ show transaction isolation level;
   ## Дополнения
 * Миниотчета в markdown
   Для начала устанавливаю либо обновляю Visual Studio Code
-  У меня linux mint перехлжу по ссылке [ссылка на официальный сайт Visual Studio Code ](https://code.visualstudio.com/) скачиваю последнию версию в формате .deb. 
-  Markdown устанавливается в самой Visual Studio Code
+  В данном случае мне нужно будет выполнить установку на linux mint перехожу по ссылке [ссылка на официальный сайт Visual Studio Code ](https://code.visualstudio.com/) скачиваю последнию версию в формате .deb. и устанавливаю
+
+  Приложение Markdown устанавливается в самой Visual Studio Code
 
  ![image](https://user-images.githubusercontent.com/85208391/197927071-1bd0900f-622f-40a6-b218-4e0d8ee6aff4.png)
  
-* Основы github.
-    
+* __Основы установки github.__
+В целом для работы с github необходимо его установить на свою рабочую машину.
 
+   * Основные команды которые применялись в работе
+``` 
+sudo apt-get install git 
+git clone <https://github>
+git checkout -b <new name branch>
+git add *
+git commit -m "update"
+git push origin <name branch>
+git pull
+```
 
-
-
-   
