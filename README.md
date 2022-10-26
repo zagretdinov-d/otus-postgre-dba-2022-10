@@ -142,7 +142,9 @@ show transaction isolation level;
 * Миниотчета в markdown
   Для начала устанавливаю либо обновляю Visual Studio Code
   У меня linux mint перехлжу по ссылке [ссылка на официальный сайт Visual Studio Code ](https://code.visualstudio.com/) скачиваю последнию версию в формате .deb 
-  
+  Markdown устанавливается в самой Visual Studio Code
+ ![image](https://user-images.githubusercontent.com/85208391/197927071-1bd0900f-622f-40a6-b218-4e0d8ee6aff4.png)
+ 
     
 
 
