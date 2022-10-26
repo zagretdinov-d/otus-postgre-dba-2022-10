@@ -103,7 +103,7 @@ show transaction isolation level;
 ```
 ![image](https://user-images.githubusercontent.com/85208391/197898565-ecbb1e51-2f7a-4d86-a733-0386a5d674ad.png)
 
-* начинаю новую транзакцию на обоих сессиях с дефолтным (не меняя) уровнем изоляции
+* Начинаю новую транзакцию на обоих сессиях с дефолтным (не меняя) уровнем изоляции
    * На обоих сесиях
     ``` begin; ``` 
    
@@ -111,7 +111,13 @@ show transaction isolation level;
     ``` insert into persons(first_name, second_name) values('sergey', 'sergeev'); ```
     * На второй сессии
     ``` select * from persons; ```
-* При выполнения запроса новая запись не была добавлена.
- ![image](https://user-images.githubusercontent.com/85208391/197907638-c3d91757-b345-4c43-bbe6-64811435bcc3.png)
+    * При выполнения запроса новая запись не была добавлена.
+    
+    ![image](https://user-images.githubusercontent.com/85208391/197907638-c3d91757-b345-4c43-bbe6-64811435bcc3.png)
+    * Причины:
+      *   Вторая сессия транзакции не смогла прочитать еще не подтвержденные данные первой сессии транзакции, так как autocommit был отключен.
+  ```commit;```
 
-
+* Завершаю первую сессию транзакций ```commit;```
+  * на второй сессии ``` select * from persons;```
+  * проверяю после подтверждения commit запись появилась
