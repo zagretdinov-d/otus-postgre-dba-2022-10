@@ -121,4 +121,4 @@ show transaction isolation level;
 * Завершаю первую сессию транзакций ```commit;```
   * на второй сессии ``` select * from persons;```
   * проверяю, после подтверждения ```commit``` запись появилась
-  
+  ![image](https://user-images.githubusercontent.com/85208391/197910719-21a3b956-a1cb-4a85-abeb-b9bdf715606a.png)
