@@ -42,6 +42,7 @@ _Ввожу следующую команду_
 gcloud compute instances list
 ```
 _выходные данные:_
+
 ![image](https://user-images.githubusercontent.com/85208391/197828060-be5dd53c-563c-4b9f-a0a4-df7af81cd584.png)
 
 - _Шаг-4: Создание ssh-ключей_
