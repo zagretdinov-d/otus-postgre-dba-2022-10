@@ -160,4 +160,8 @@ git commit -m "update"
 git push origin <name branch>
 git pull
 ```
-
+## Заключение
+* Изучена платформа Google Cloud;
+* Настроено подключение по ssн к облаку;
+* Установлена postgresql-12
+* Выполнены все задания по транзакции.
