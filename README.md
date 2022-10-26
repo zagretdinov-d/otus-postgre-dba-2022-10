@@ -131,7 +131,13 @@ show transaction isolation level;
   * Создаю новую транзакцию на обоих сессиях ```BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;```
   * В первой сессии добавляю новую запись ```insert into persons(first_name, second_name) values('sveta', 'svetova');```
   * делаю persons во второй сессии ```select * from persons```
-  
+  * выполняю на второй сессии ``` select * from persons; ```
+  ![image](https://user-images.githubusercontent.com/85208391/197917991-b02783f5-db64-4475-85c1-c53cd803ebb2.png)
+  * Пробую с помощью commit подтвердить данные первой сессии повторяю действия результат тот же.
+  * Подтверждаю с помощью commit на второй сессии, повторяю действия в результате запись добавилась
+  ![image](https://user-images.githubusercontent.com/85208391/197919054-a08f5edd-a25b-4e8d-b1a2-9d02b6933717.png)
+  * В итоге получаем следующее решение после того как сессия один прочитала строку, на сессии два с помощью commit; подтвердили, другими словами зафиксировали добавленную строку, все применилось и строка появилась.  
+    
 
 
 
