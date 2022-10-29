@@ -12,4 +12,5 @@ _Cоздание ВМ с Ubuntu 20.04/22.04 или развернуть доке
   
 ![image](https://user-images.githubusercontent.com/85208391/198849625-407b2ffa-7d62-43fc-be14-3f7e0bf1661f.png)
 
+![image](https://user-images.githubusercontent.com/85208391/198852411-50128c7f-b8f5-4ba6-b15c-d79678b42e44.png)
 
