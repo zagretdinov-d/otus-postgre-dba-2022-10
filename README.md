@@ -46,3 +46,11 @@ sudo systemctl enable docker
 ```
 sudo mkdir -p /var/lib/postgres
 ```
+
+
+![image](https://user-images.githubusercontent.com/85208391/198855489-a0d8c526-c5ca-4db1-adb0-a7fd42e33cb3.png)
+
+
+
+
+
