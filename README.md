@@ -1,1 +1,1 @@
-# otus-postgre-dba-2022-10
+# Lesson 3
