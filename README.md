@@ -25,3 +25,12 @@ sudo pg_dropcluster 14 main
 * Все кластера успешно удалены.
 
 ___Установка Docker Engine___
+
+
+![image](https://user-images.githubusercontent.com/85208391/198853185-945f4d3a-38d7-4ee8-93e7-a05566b0a077.png)
+
+
+
+
+
+
