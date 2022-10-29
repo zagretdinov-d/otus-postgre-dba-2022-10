@@ -26,7 +26,6 @@ sudo pg_dropcluster 14 main
 
 ___Установка Docker Engine___
 
-
 ![image](https://user-images.githubusercontent.com/85208391/198853185-945f4d3a-38d7-4ee8-93e7-a05566b0a077.png)
 
 ![image](https://user-images.githubusercontent.com/85208391/198853447-8c2f0c8c-9b9c-4e98-8c66-83b670f304c6.png)
