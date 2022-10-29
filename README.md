@@ -7,4 +7,6 @@
 * __Решение:__
 
 _Cоздание ВМ с Ubuntu 20.04/22.04 или развернуть докер любым удобным способом_
+![image](https://user-images.githubusercontent.com/85208391/198849625-407b2ffa-7d62-43fc-be14-3f7e0bf1661f.png)
+
 
