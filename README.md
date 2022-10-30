@@ -56,5 +56,9 @@ sudo docker run --name pg-node --network pg-net -e POSTGRES_PASSWORD=postgres -d
 ![image](https://user-images.githubusercontent.com/85208391/198855489-a0d8c526-c5ca-4db1-adb0-a7fd42e33cb3.png)
 
 * Видно что все успешно поставилось c соответственно запустилось.
+``` sudo docker ps ```
+
+![image](https://user-images.githubusercontent.com/85208391/198858160-5fc0c349-dae9-4651-992c-942b133c841d.png)
+
 
 * разворачиваю отдельный контейнер с клиентом postgres
