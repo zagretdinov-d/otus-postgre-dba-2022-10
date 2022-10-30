@@ -126,9 +126,9 @@ sudo docker-compose up -d
    * с помощью команды ```scp``` отправляю файлик docker-compose.yml на сервер и вы полняю команду ``` sudo docker-compose up -d ```.
    * Copy-past создал файлик docker-compose.yml скопировал вставил содержимое.
 
+* В результа все успешно запустилось.
 ![image](https://user-images.githubusercontent.com/85208391/198870674-69f316f7-a6db-41d1-a549-56c4be505364.png)
 ![image](https://user-images.githubusercontent.com/85208391/198870706-14793ff2-77f2-496a-96ff-5594fd30133e.png)
-
 
 
 ## Заключение
