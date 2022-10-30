@@ -132,6 +132,8 @@ sudo docker-compose up -d
 ![image](https://user-images.githubusercontent.com/85208391/198870706-14793ff2-77f2-496a-96ff-5594fd30133e.png)
 ![image](https://user-images.githubusercontent.com/85208391/198871223-e44106ec-29bb-4da8-90ac-dbd9ba1154a6.png)
 
+Для просмотра содержимого, файл docker-compose.yml так же загружен в github.
+
 ## Заключение
 * Изучен и установлен PostgreSQL-14 в Docker контейнер
 * Настроен контейнер для внешнего подключения 
