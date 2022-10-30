@@ -81,4 +81,5 @@ sudo docker run --name pg-node --network pg-net -e POSTGRES_PASSWORD=postgres -d
 ![image](https://user-images.githubusercontent.com/85208391/198859156-f0c2f77d-af92-49c7-b54b-52decf6c0fcc.png)
 
 
-
+___Подключения к контейнеру с сервером с компьютера извне инстансов GCP места установки докера___
+* В данном случае я все разворачивал на google облаке. Перед тем чтоб подключиться к серверу со своего компьютера необходимо открыть порт 5432 в облаке. 
