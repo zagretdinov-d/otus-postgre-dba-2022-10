@@ -61,4 +61,17 @@ sudo docker run --name pg-node --network pg-net -e POSTGRES_PASSWORD=postgres -d
 ![image](https://user-images.githubusercontent.com/85208391/198858160-5fc0c349-dae9-4651-992c-942b133c841d.png)
 
 
-* разворачиваю отдельный контейнер с клиентом postgres
+* Разворачиваю отдельный контейнер с клиентом postgres
+   * Подключась из контейнера с клиентом к контейнеру с сервером
+   ``` 
+   sudo docker run -it --rm --network pg-net --name pg-client postgres:14 psql -h pg-node -U postgres 
+   ```
+   * Создаю таблицу с парой строк используя следующие команды.
+   ```
+   create table city (id int, name varchar(60));
+   insert into city values (1, 'Astana'), (2, 'Karaganda');
+   select * from city;
+   ```
+* И в результате
+
+
