@@ -128,9 +128,7 @@ sudo docker-compose up -d
 
 * В результа все успешно запустилось и работает.
 
-![image](https://user-images.githubusercontent.com/85208391/198870674-69f316f7-a6db-41d1-a549-56c4be505364.png)
-![image](https://user-images.githubusercontent.com/85208391/198870706-14793ff2-77f2-496a-96ff-5594fd30133e.png)
-![image](https://user-images.githubusercontent.com/85208391/198871223-e44106ec-29bb-4da8-90ac-dbd9ba1154a6.png)
+![image](https://user-images.githubusercontent.com/85208391/198874212-c47ca3ad-60ed-4ec1-b0fd-9e261aa565d1.png)
 
 Для просмотра содержимого, файл docker-compose.yml так же загружен в github.
 
