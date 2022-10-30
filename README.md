@@ -47,10 +47,14 @@ sudo systemctl enable docker
 sudo mkdir -p /var/lib/postgres
 ```
 
+* Создаю сеть, разворачиваю контейнер с PostgreSQL 14 и смонтирую в него созданный каталог /var/lib/postgres
+```
+sudo docker network create pg-net
+sudo docker run --name pg-node --network pg-net -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 -v /var/lib/postgres:/var/lib/postgresql/data postgres:14
+```
 
 ![image](https://user-images.githubusercontent.com/85208391/198855489-a0d8c526-c5ca-4db1-adb0-a7fd42e33cb3.png)
 
+* Видно что все успешно поставилось c соответственно запустилось.
 
-
-
-
+* разворачиваю отдельный контейнер с клиентом postgres
