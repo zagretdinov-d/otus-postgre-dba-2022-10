@@ -72,7 +72,8 @@ sudo docker run --name pg-node --network pg-net -e POSTGRES_PASSWORD=postgres -d
    insert into city values (1, 'Astana'), (2, 'Karaganda');
    select * from city;
    ```
-* И в результате
+* И в результате 
 ![image](https://user-images.githubusercontent.com/85208391/198858660-c40b5e11-6083-46cc-b0d9-b5f50669bf58.png)
 
+* Убедимся что подключились через отдельный контейнер.
 
