@@ -92,6 +92,7 @@ ___Подключения к контейнеру с сервером с ком�
 ![image](https://user-images.githubusercontent.com/85208391/198860761-be889ff6-c393-45c6-b1b3-5db308bb2c3d.png)
 
 
+![image](https://user-images.githubusercontent.com/85208391/198861281-6ad57844-756f-42e0-8f04-0698f4bb754c.png)
 
 
 
