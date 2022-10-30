@@ -82,17 +82,29 @@ sudo docker run --name pg-node --network pg-net -e POSTGRES_PASSWORD=postgres -d
 
 
 ___Подключения к контейнеру с сервером с компьютера извне инстансов GCP места установки докера___
-* В данном случае я все разворачивал на google облаке. Перед тем чтоб подключиться к серверу со своего компьютера необходимо открыть порт 5432 в облаке.
+* В данном случае я все разворачивал на google облаке. Перед тем чтоб подключиться к серверу со своего компьютера необходимо добавить порт 5432 в облаке и сохранить.
 ![image](https://user-images.githubusercontent.com/85208391/198860710-447219ec-23af-48db-abde-ce76b7bdf607.png)
 
 
 
-* После добавления порта успешно подключаюсь.
+* После добавления порта успешно подключаюсь. ```psql -p 5432 -U postgres -h <external_IP> -d postgres -W```
 
 ![image](https://user-images.githubusercontent.com/85208391/198860761-be889ff6-c393-45c6-b1b3-5db308bb2c3d.png)
 
 
 ![image](https://user-images.githubusercontent.com/85208391/198861281-6ad57844-756f-42e0-8f04-0698f4bb754c.png)
+
+* Удаление контейнера с сервера.
+* Создание заного контейнера
+* Подключаюсь снова из контейнера с клиентом к контейнеру с сервером
+  ``` 
+  По данным поставленным целям выполняю следующие команды:
+  sudo docker stop <container_id>
+  sudo docker rm <container_id>
+  sudo docker run --name pg-node --network pg-net -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 -v /var/lib/postgres:/var/lib/postgresql/data postgres:14
+  ```
+В результате получаю:
+
 
 
 
