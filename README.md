@@ -126,7 +126,7 @@ sudo docker-compose up -d
    * с помощью команды ```scp``` отправляю файлик docker-compose.yml на сервер и вы полняю команду ``` sudo docker-compose up -d ```.
    * Copy-past создал файлик docker-compose.yml скопировал вставил содержимое.
 
-* В результа все успешно запустилось и работает.
+* В результате все успешно запустилось, примонтировалось и работает.
 
 ![image](https://user-images.githubusercontent.com/85208391/198874212-c47ca3ad-60ed-4ec1-b0fd-9e261aa565d1.png)
 
@@ -135,7 +135,4 @@ sudo docker-compose up -d
 ## Заключение
 * Изучен и установлен PostgreSQL-14 в Docker контейнер
 * Настроен контейнер для внешнего подключения 
-
-
-
-
+* Проведена дополнительная работа с инструментом docker compose.  
