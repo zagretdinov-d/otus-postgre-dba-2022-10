@@ -13,3 +13,6 @@
 ___Создаю виртуальную машину c Ubuntu 20.04 LTS (bionic) в GCE___
 
   ![изображение](https://user-images.githubusercontent.com/85208391/200965481-29dc733e-b6cb-42dd-92ee-bfb98bc58afc.png)
+  
+  
+![изображение](https://user-images.githubusercontent.com/85208391/200966515-3e175450-409b-4e33-9f3a-81ef8c5c5bf6.png)
