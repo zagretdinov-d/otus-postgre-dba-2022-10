@@ -9,4 +9,7 @@
    - переносить содержимое БД PostgreSQL между виртуальными машинами
 
 * __Решение__:
+
+___Создаю виртуальную машину c Ubuntu 20.04 LTS (bionic) в GCE___
+
   ![изображение](https://user-images.githubusercontent.com/85208391/200965481-29dc733e-b6cb-42dd-92ee-bfb98bc58afc.png)
