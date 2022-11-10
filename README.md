@@ -20,3 +20,4 @@ ___поставлена версия PostgreSQL 14 и проверена___
 
 ![изображение](https://user-images.githubusercontent.com/85208391/200966515-3e175450-409b-4e33-9f3a-81ef8c5c5bf6.png)
 
+![изображение](https://user-images.githubusercontent.com/85208391/200985501-fa3502df-8e4a-462e-a516-c041f72b893a.png)
