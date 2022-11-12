@@ -63,7 +63,7 @@ sda       8:0    0    10G  0 disk
 └─sda15   8:15   0   106M  0 part /boot/efi
 sdb       8:16   0    10G  0 disk
 ```
-___Деление новго диска GPT partition___
+___Деление нового диска GPT partition___
 
 ```
 damir@node-1:~$ sudo parted /dev/sdb mklabel gpt
@@ -293,16 +293,12 @@ node-2 -> Edit node-2 instance -> attach existing disk -> Выбор диска.
 и сохраняемся.
 ```
 _В результате вывод:_
+
 ![image](https://user-images.githubusercontent.com/85208391/201468852-9fe4ba15-87c3-421f-a6fc-1c73b0c6dd33.png)
 
-* __Подключаюсь к новой ВМ node-2:__
+* __Подключаюсь к новой ВМ node-2 и останавливаю postgresql:__
 
 ```
-damir@node-2:~$ systemctl stop postgresql
-==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
-Authentication is required to stop 'postgresql.service'.
-Authenticating as: Ubuntu (ubuntu)
-Password: 
 damir@node-2:~$ sudo systemctl stop postgresql
 damir@node-2:~$ systemctl status postgresql
 ● postgresql.service - PostgreSQL RDBMS
@@ -327,10 +323,9 @@ NAME    MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
 sdb       8:16   0    10G  0 disk 
 └─sdb1    8:17   0    10G  0 part 
 ```
-* __Монтирую внешний диск__
+* __Делаю пользователя postgres владельцем, монтирую внешний диск__
 
 ```
-ls -la /var/lib/postgresql
 sudo chown -R postgres:postgres /var/lib/postgresql/
 sudo mount /dev/sdb1 /var/lib/postgresql/
 df -h
