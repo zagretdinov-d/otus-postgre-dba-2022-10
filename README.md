@@ -366,4 +366,5 @@ postgres=# select * from test;
  1
 (1 row)
 ```
+![image](https://user-images.githubusercontent.com/85208391/201469605-46eb921f-c54f-40f9-b55b-c29d05000a2e.png)
 
