@@ -20,13 +20,11 @@ ___поставлена версия PostgreSQL 14 и проверена___
 
 ![изображение](https://user-images.githubusercontent.com/85208391/200966515-3e175450-409b-4e33-9f3a-81ef8c5c5bf6.png)
 
+
 ___Cогласно заданию захожу из под пользователя postgres в psql и создаю произвольную таблицу с произвольным содержимым___
 
-```
-create table test(c1 text);
-insert into test values('1');
-\q 
-```
+``` postgres=# create table test(c1 text);```
+``` postgres=# insert into test values('1');```
 
 
 
