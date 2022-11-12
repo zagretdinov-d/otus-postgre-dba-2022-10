@@ -32,7 +32,11 @@ ___Cогласно заданию захожу из под пользовате�
 ___Останавливаю postgres___
 ``` sudo -u postgres pg_ctlcluster 14 main stop либо sudo systemctl start postgresql@14-main```
 
+![image](https://user-images.githubusercontent.com/85208391/201456403-740bd19a-bd0e-45f6-b96e-d5f7b4dd9f37.png)
+
 ___Создаю новый standard persistent диск GKE через Compute Engine -> Disks в том же регионе и зоне что GCE инстанс размером например 10GB___
+
+
 
 * В результате получилось:
 
