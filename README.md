@@ -166,7 +166,7 @@ tmpfs           198M     0  198M   0% /run/user/1001
 ```
 _в результате: /dev/sdb1 - /mnt/data_
 
-* Чтобы диск нормально примонтировался после перезагрузки - делаю изменения в /etc/fstab то есть вношу запись информации диска:
+* Чтобы диск нормально примонтировался после перезагрузки - делаю изменения прописываю в /etc/fstab то есть вношу запись данные диска:
 ```
 damir@node-1:~$ cat /etc/fstab
 LABEL=cloudimg-rootfs	/	 ext4	defaults	0 1
@@ -217,11 +217,6 @@ ___Тест файловой системы нового диска.___
 damir@node-1:~$ ls -l /mnt/data
 total 16
 drwx------ 2 root root 16384 Nov 12 06:54 lost+found
-damir@node-1:~$ echo "success" | sudo tee /mnt/data/test_file
-success
-damir@node-1:~$ cat /mnt/data/test_file
-success
-damir@node-1:~$ sudo rm /mnt/data/test_file
 damir@node-1:~$ echo "testing" | sudo tee /mnt/data/file
 testing
 damir@node-1:~$ cat /mnt/data/file
@@ -288,7 +283,7 @@ ___Все работает!!!___
 
 ## Задание со звездочкой *:
 * ___Поднимаю второй сервер называю node-2. Устанавливаю Postgresql-14.___
-* ___ Далее что необходимо остановить первый сервер и отключить диск, то-есть в данном случае без выполнения данных действий невозможно перемонтировать.
+* ___Далее что необходимо остановить первый сервер и отключить диск, то-есть в данном случае без выполнения данных действий невозможно перемонтировать.___
 
 ![image](https://user-images.githubusercontent.com/85208391/201468528-184d96b7-47e9-4f7a-a8a2-d17646861119.png)
 
@@ -297,20 +292,78 @@ node-1 -> Edit node-1 instance -> remove disk
 node-2 -> Edit node-2 instance -> attach existing disk -> Выбор диска.
 и сохраняемся.
 ```
+_В результате вывод:_
 ![image](https://user-images.githubusercontent.com/85208391/201468852-9fe4ba15-87c3-421f-a6fc-1c73b0c6dd33.png)
 
+* __Подключаюсь к новой ВМ node-2:__
 
+```
+damir@node-2:~$ systemctl stop postgresql
+==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
+Authentication is required to stop 'postgresql.service'.
+Authenticating as: Ubuntu (ubuntu)
+Password: 
+damir@node-2:~$ sudo systemctl stop postgresql
+damir@node-2:~$ systemctl status postgresql
+● postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+     Active: inactive (dead) since Sat 2022-11-12 09:52:49 UTC; 9s ago
+   Main PID: 10455 (code=exited, status=0/SUCCESS)
 
+Nov 12 09:08:08 node-2 systemd[1]: Starting PostgreSQL RDBMS...
+Nov 12 09:08:08 node-2 systemd[1]: Finished PostgreSQL RDBMS.
+Nov 12 09:52:49 node-2 systemd[1]: postgresql.service: Succeeded.
+Nov 12 09:52:49 node-2 systemd[1]: Stopped PostgreSQL RDBMS.
+damir@node-2:~$ pg_lsclusters
+Ver Cluster Port Status Owner    Data directory              Log file
+14  main    5432 down   postgres /var/lib/postgresql/14/main /var/log/postgresql/postgresql-14-main.log
+```
 
-и подключаюсь его к новой ВМ:
+* __Удаляю файлы с данными из /var/lib/postgres и проверяю диск__
+```
+damir@node-2:~$ sudo rm -rf /var/lib/postgresql
+damir@node-2:~$ lsblk
+NAME    MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sdb       8:16   0    10G  0 disk 
+└─sdb1    8:17   0    10G  0 part 
+```
+* __Монтирую внешний диск__
 
-lsblk
-mkdir /var/lib/postgresql
+```
 ls -la /var/lib/postgresql
-chown -R postgres:postgres /var/lib/postgresql/
-mount /dev/sdb1 /var/lib/postgresql/
+sudo chown -R postgres:postgres /var/lib/postgresql/
+sudo mount /dev/sdb1 /var/lib/postgresql/
 df -h
-ls -la /var/lib/postgresql
-ls -la /var/lib/postgresql/13/
-systemctl start postgresql
-systemctl status postgresql
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root       9.6G  2.2G  7.4G  23% /
+devtmpfs        2.0G     0  2.0G   0% /dev
+tmpfs           2.0G     0  2.0G   0% /dev/shm
+tmpfs           393M  944K  392M   1% /run
+tmpfs           5.0M     0  5.0M   0% /run/lock
+tmpfs           2.0G     0  2.0G   0% /sys/fs/cgroup
+/dev/loop0       56M   56M     0 100% /snap/core18/2566
+/dev/loop1       64M   64M     0 100% /snap/core20/1623
+/dev/loop2      302M  302M     0 100% /snap/google-cloud-cli/77
+/dev/loop3       68M   68M     0 100% /snap/lxd/22753
+/dev/loop4       48M   48M     0 100% /snap/snapd/17029
+/dev/sda15      105M  5.2M  100M   5% /boot/efi
+tmpfs           393M     0  393M   0% /run/user/1001
+/dev/sdb1       9.8G   42M  9.2G   1% /var/lib/postgresql
+```
+* __Запуск PostgreSQL__
+sudo systemctl start postgresql
+
+* __Тест__
+
+```
+damir@node-2:~$ sudo -u postgres psql
+psql (14.6 (Ubuntu 14.6-1.pgdg20.04+1))
+Type "help" for help.
+
+postgres=# select * from test;
+ c1 
+----
+ 1
+(1 row)
+```
+
