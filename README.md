@@ -282,6 +282,26 @@ Ver Cluster Port Status Owner    Data directory    Log file
 ```
 ___Все работает!!!___
 
+* Захожу через psql и проверяю содержимое ранее созданной таблицы
+
 ![image](https://user-images.githubusercontent.com/85208391/201466731-931198ac-536f-4785-8197-61e90bc2c71d.png)
 
+## Задание со звездочкой *:
+* ___Поднимаю второй сервер называю node-2. Устанавливаю Postgresql-14.___
+* ___ Далее что необходимо сделать это остановить первый сервер и отключить диск, то-есть в данном случае без выполнения данных действий невозможно перемонтировать.
+   
 
+
+
+и подключаем его к этой ВМ:
+
+lsblk
+mkdir /var/lib/postgresql
+ls -la /var/lib/postgresql
+chown -R postgres:postgres /var/lib/postgresql/
+mount /dev/sdb1 /var/lib/postgresql/
+df -h
+ls -la /var/lib/postgresql
+ls -la /var/lib/postgresql/13/
+systemctl start postgresql
+systemctl status postgresql
