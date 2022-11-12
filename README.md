@@ -24,8 +24,10 @@ ___поставлена версия PostgreSQL 14 и проверена___
 ___Cогласно заданию захожу из под пользователя postgres в psql и создаю произвольную таблицу с произвольным содержимым___
 
 ``` postgres=# create table test(c1 text);```
+
 ``` postgres=# insert into test values('1');```
 
+![image](https://user-images.githubusercontent.com/85208391/201454914-a674446d-2b53-4d53-81b0-971c3f77a697.png)
 
 
 ![изображение](https://user-images.githubusercontent.com/85208391/200985501-fa3502df-8e4a-462e-a516-c041f72b893a.png)
