@@ -282,5 +282,6 @@ Ver Cluster Port Status Owner    Data directory    Log file
 ```
 ___Все работает!!!___
 
+![image](https://user-images.githubusercontent.com/85208391/201466731-931198ac-536f-4785-8197-61e90bc2c71d.png)
 
 
