@@ -297,6 +297,10 @@ node-1 -> Edit node-1 instance -> remove disk
 node-2 -> Edit node-2 instance -> attach existing disk -> Выбор диска.
 и сохраняемся.
 ```
+![image](https://user-images.githubusercontent.com/85208391/201468852-9fe4ba15-87c3-421f-a6fc-1c73b0c6dd33.png)
+
+
+
 
 и подключаюсь его к новой ВМ:
 
