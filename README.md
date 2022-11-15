@@ -8,16 +8,80 @@
   * создание роли для чтения и записи из созданной схемы созданной базы данных
 
 ### Решение:
-1 создайте новый кластер PostgresSQL 14
-2 зайдите в созданный кластер под пользователем postgres
-3 создайте новую базу данных testdb
-4 зайдите в созданную базу данных под пользователем postgres
-5 создайте новую схему testnm
-6 создайте новую таблицу t1 с одной колонкой c1 типа integer
-7 вставьте строку со значением c1=1
-8 создайте новую роль readonly
-9 дайте новой роли право на подключение к базе данных testdb
-10 дайте новой роли право на использование схемы testnm
+__1 Cоздаю новый кластер PostgresSQL 14__
+  * _c помощью скрипта состоящий из команд устанавливаю PostgresSQL 14._
+```
+sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y -q && sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - && sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt -y install postgresql-14
+```
+  * _Проверяю сам кластер_
+```
+damir@node-2:~$ pg_lsclusters
+Ver Cluster Port Status Owner    Data directory              Log file
+14  main    5432 online postgres /var/lib/postgresql/14/main /var/log/postgresql/postgresql-14-main.log
+```
+
+__2 захожу под пользователем postgres__
+```
+damir@node-2:~$ sudo -u postgres psql
+psql (14.6 (Ubuntu 14.6-1.pgdg20.04+1))
+Type "help" for help.
+
+postgres=# 
+```
+
+__3 создайте новую базу данных testdb__
+
+```
+postgres=# CREATE DATABASE testdb;
+CREATE DATABASE
+postgres=#
+```
+__4 захожу в созданную базу данных под пользователем postgres__
+```
+postgres=# \c testdb;
+You are now connected to database "testdb" as user "postgres".
+testdb=# \conninfo
+You are connected to database "testdb" as user "postgres" via socket in "/var/run/postgresql" at port "5432".
+```
+__5 создайте новую схему testnm__
+```
+testdb=# CREATE SCHEMA testnm;
+CREATE SCHEMA
+```
+
+__6 создаю новую таблицу t1 с одной колонкой c1 типа integer__
+```
+testdb=# CREATE TABLE t1(c1 integer);
+CREATE TABLE
+```
+
+__7 вставляю строку со значением c1=1__
+```
+testdb=# INSERT INTO t1 values(1);
+INSERT 0 1
+```
+
+__8 создаю новую роль readonly__
+```
+testdb=# CREATE role readonly;
+CREATE ROLE
+```
+
+__9 даю новую роль право на подключение к базе данных testdb__
+```
+testdb=# grant connect on DATABASE testdb TO readonly;
+GRANT
+```
+
+__10 дайте новой роли право на использование схемы testnm__
+
+```
+grant usage on SCHEMA testnm to readonly;
+```
+
+
+
+
 11 дайте новой роли право на select для всех таблиц схемы testnm
 12 создайте пользователя testread с паролем test123
 13 дайте роль readonly пользователю testread
