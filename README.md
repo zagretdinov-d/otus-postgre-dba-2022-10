@@ -78,37 +78,165 @@ __10 дайте новой роли право на использование �
 ```
 grant usage on SCHEMA testnm to readonly;
 ```
+__11 дайте новой роли право на select для всех таблиц схемы testnm__
+```
+testdb=# grant SELECT on all TABLEs in SCHEMA testnm TO readonly;
+GRANT
+```
+
+__12 создайте пользователя testread с паролем test123__
+```
+testdb=# CREATE USER testread with password 'test123'
+testdb-# ;
+CREATE ROLE
+```
+__13 дайте роль readonly пользователю testread__
+```
+testdb=# grant readonly TO testread;
+GRANT ROLE
+```
+__14 зайдите под пользователем testread в базу данных testdb__
+```
+testdb=# 
+Password for user testread: 
+SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, bits: 256, compression: off)
+You are now connected to database "testdb" as user "testread" on host "*" (address "127.0.0.1") at port "5432".
+```
+__15 Делаю select * from t1;__
+```
+testdb=> SELECT * FROM t1;
+ERROR:  permission denied for table t1
+```
+___Пояснение и моё решения которое решил применить:___
+  * Не получилось так как у пользователя нет прав доступа к этой конкретной таблице.
+  * Необходимо предоставить все привилегии проблемному пользователю. 
+  * Подключаюсь к пользователю, который является суперпользователем.
+  * Подключаюсь к базе данных testdb, в которой существует таблица t1.
+  * Затем выполняю следующую команду, чтобы предоставить все привилегии пользователю testread в таблице «t1».
+
+```
+damir@node-2:~$ sudo -u postgres psql
+psql (14.6 (Ubuntu 14.6-1.pgdg20.04+1))
+Type "help" for help.
+
+postgres=# \c testdb
+You are now connected to database "testdb" as user "postgres".
+testdb=# GRANT ALL PRIVILEGES ON TABLE t1 TO testread;
+GRANT
+testdb=# \c testdb testread *
+Password for user testread: 
+SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, bits: 256, compression: off)
+You are now connected to database "testdb" as user "testread" on host "*" (address "127.0.0.1") at port "5432".
+testdb=> SELECT * FROM t1;
+ c1 
+----
+  1
+(1 row)
+
+testdb=> 
+
+```
+  * В результате все успешно получилось.
+
+__16 посмотр на список таблиц__
+```
+testdb=> \dt
+        List of relations
+ Schema | Name | Type  |  Owner   
+--------+------+-------+----------
+ public | t1   | table | postgres
+(1 row)
+ 
+testdb=> 
+```
+  * Согласно шпаргалке таблица создана в схеме public а не testnm и прав на public для роли readonly не давали.
+  * потому что в search_path скорее всего "$user", public при том что схемы $USER нет то таблица по умолчанию создалась в public
 
 
+__17 вернулся в базу данных testdb под пользователем postgres__
+```
+damir@node-2:~$ sudo -u postgres psql
+psql (14.6 (Ubuntu 14.6-1.pgdg20.04+1))
+Type "help" for help.
+
+postgres=# \c testdb postgres
+You are now connected to database "testdb" as user "postgres".
+testdb=#
+```
+__18 удалите таблицу t1__
+
+```
+testdb=# drop TABLE t1;
+DROP TABLE
+```
+__24 создайте ее заново но уже с явным указанием имени схемы testnm__
+```
+testdb=# CREATE TABLE testnm.t1(c1 integer);
+CREATE TABLE
+```
+
+__25 вставьте строку со значением c1=1__
+```
+testdb=# INSERT INTO testnm.t1 values(1);
+INSERT 0 1
+```
+__26 захожу под пользователем testread в базу данных testdb и выполню select * from testnm.t1;__
+
+```
+testdb=# \c testdb testread *
+Password for user testread: 
+SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, bits: 256, compression: off)
+You are now connected to database "testdb" as user "testread" on host "*" (address "127.0.0.1") at port "5432".
+testdb=> select * from testnm.t1;
+ERROR:  permission denied for table t1
+testdb=> 
+```
+соответственно не получилось потому что grant SELECT on all TABLEs in SCHEMA testnm TO readonly дал доступ только для существующих на тот момент времени таблиц а t1 пересоздавалась.
+
+__27 Добавляю согласно шпаргалке команды и проверяю и делаю select * from testnm.t1;__
+
+```
+postgres=# \c testdb postgres
+You are now connected to database "testdb" as user "postgres".
+testdb=# ALTER default privileges in SCHEMA testnm grant SELECT on TABLEs to readonly;
+ALTER DEFAULT PRIVILEGES
+testdb=# \c testdb testread;
+connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  Peer authentication failed for user "testread"
+Previous connection kept
+testdb=# \c testdb testread *
+Password for user testread: 
+SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, bits: 256, compression: off)
+You are now connected to database "testdb" as user "testread" on host "*" (address "127.0.0.1") at port "5432".
+testdb=> select * from testnm.t1;
+ERROR:  permission denied for table t1
+testdb=> 
+```
+
+Как видно снова не получилось потому что ALTER default будет действовать для новых таблиц а grant SELECT on all TABLEs in SCHEMA testnm TO readonly отработал только для существующих на тот момент времени. надо сделать снова или grant SELECT или пересоздать таблицу
+```
+postgres=# \c testdb postgres;
+You are now connected to database "testdb" as user "postgres".
+testdb=# grant SELECT on all TABLEs in SCHEMA testnm TO readonly
+testdb-# ;
+GRANT
+testdb=# \c testdb testread *
+Password for user testread: 
+SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, bits: 256, compression: off)
+You are now connected to database "testdb" as user "testread" on host "*" (address "127.0.0.1") at port "5432".
+testdb=> select * from testnm.t1;
+ c1 
+----
+  1
+(1 row)
+
+testdb=> 
+```
+теперь все получилось!
 
 
-11 дайте новой роли право на select для всех таблиц схемы testnm
-12 создайте пользователя testread с паролем test123
-13 дайте роль readonly пользователю testread
-14 зайдите под пользователем testread в базу данных testdb
-15 сделайте select * from t1;
-16 получилось? (могло если вы делали сами не по шпаргалке и не упустили один существенный момент про который позже)
-17 напишите что именно произошло в тексте домашнего задания
-18 у вас есть идеи почему? ведь права то дали?
-19 посмотрите на список таблиц
-20 подсказка в шпаргалке под пунктом 20
-21 а почему так получилось с таблицей (если делали сами и без шпаргалки то может у вас все нормально)
-22 вернитесь в базу данных testdb под пользователем postgres
-23 удалите таблицу t1
-24 создайте ее заново но уже с явным указанием имени схемы testnm
-25 вставьте строку со значением c1=1
-26 зайдите под пользователем testread в базу данных testdb
-27 сделайте select * from testnm.t1;
-28 получилось?
-29 есть идеи почему? если нет - смотрите шпаргалку
-30 как сделать так чтобы такое больше не повторялось? если нет идей - смотрите шпаргалку
-31 сделайте select * from testnm.t1;
-32 получилось?
-33 есть идеи почему? если нет - смотрите шпаргалку
-31 сделайте select * from testnm.t1;
-32 получилось?
-33 ура!
-34 теперь попробуйте выполнить команду create table t2(c1 integer); insert into t2 values (2);
+28 теперь попробуйте выполнить команду create table t2(c1 integer); insert into t2 values (2);
+
+
 35 а как так? нам же никто прав на создание таблиц и insert в них под ролью readonly?
 36 есть идеи как убрать эти права? если нет - смотрите шпаргалку
 37 если вы справились сами то расскажите что сделали и почему, если смотрели шпаргалку - объясните что сделали и почему выполнив указанные в ней команды
