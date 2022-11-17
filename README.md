@@ -8,12 +8,12 @@
   * создание роли для чтения и записи из созданной схемы созданной базы данных
 
 ### Решение:
-__1 Cоздаю новый кластер PostgresSQL 14__
+__1 cоздаю новый кластер PostgresSQL 14__
   * _c помощью скрипта состоящий из команд устанавливаю PostgresSQL 14._
 ```
 sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y -q && sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - && sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt -y install postgresql-14
 ```
-  * _Проверяю сам кластер_
+  * _проверяю сам кластер_
 ```
 damir@node-2:~$ pg_lsclusters
 Ver Cluster Port Status Owner    Data directory              Log file
@@ -29,7 +29,7 @@ Type "help" for help.
 postgres=# 
 ```
 
-__3 создайте новую базу данных testdb__
+__3 создаю новую базу данных testdb__
 
 ```
 postgres=# CREATE DATABASE testdb;
@@ -43,7 +43,7 @@ You are now connected to database "testdb" as user "postgres".
 testdb=# \conninfo
 You are connected to database "testdb" as user "postgres" via socket in "/var/run/postgresql" at port "5432".
 ```
-__5 создайте новую схему testnm__
+__5 создаю новую схему testnm__
 ```
 testdb=# CREATE SCHEMA testnm;
 CREATE SCHEMA
@@ -73,24 +73,24 @@ testdb=# grant connect on DATABASE testdb TO readonly;
 GRANT
 ```
 
-__10 дайте новой роли право на использование схемы testnm__
+__10 даю новую роль и право на использование схемы testnm__
 
 ```
 grant usage on SCHEMA testnm to readonly;
 ```
-__11 дайте новой роли право на select для всех таблиц схемы testnm__
+__11 даю новую роль и право на select для всех таблиц схемы testnm__
 ```
 testdb=# grant SELECT on all TABLEs in SCHEMA testnm TO readonly;
 GRANT
 ```
 
-__12 создайте пользователя testread с паролем test123__
+__12 создаю пользователя testread с паролем test123__
 ```
 testdb=# CREATE USER testread with password 'test123'
 testdb-# ;
 CREATE ROLE
 ```
-__13 дайте роль readonly пользователю testread__
+__13 даю роль readonly пользователю testread__
 ```
 testdb=# grant readonly TO testread;
 GRANT ROLE
@@ -116,7 +116,7 @@ ERROR:  permission denied for table t1
 потому что в search_path скорее всего user, public при том что схемы $USER нет то таблица по умолчанию создалась в public
 
 
-__16 посмотр на список таблиц__
+__16 открываю список таблиц__
 ```
 
 testdb=> \dt
@@ -129,7 +129,7 @@ testdb=> \dt
 testdb=> 
 ```
   * Согласно шпаргалке таблица создана в схеме public а не testnm и прав на public для роли readonly не давали.
-  * потому что в search_path скорее всего "$user", public при том что схемы $USER нет то таблица по умолчанию создалась в public
+  * потому что в search_path скорее всего user public при том что схемы $USER нет то таблица по умолчанию создалась в public
 
 
 __17 вернулся в базу данных testdb под пользователем postgres__
@@ -295,7 +295,7 @@ You are now connected to database "testdb" as user "testread".
 testdb=> create table t3 (c1 integer);
 ERROR:  permission denied for schema public
 ```
-от пользователя testread не создаются объекты в схеме public.
+  * от пользователя testread не создаются объекты в схеме public.
 ```
 testdb=> \dp testnm.*
                                 Access privileges
