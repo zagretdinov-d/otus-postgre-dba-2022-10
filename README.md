@@ -93,12 +93,12 @@ CREATE DATABASE
 то есть все Transactions per second (TPS) я буду наблюдать в этой таблице
 
 
-
+![image](https://user-images.githubusercontent.com/85208391/202756997-a6481fde-9d4e-4429-8d3b-ce0478cb0620.png)
 
 ![image](https://user-images.githubusercontent.com/85208391/202756813-3e573a49-c38a-4f1b-bfde-5cec2f4fda75.png)
 
 
-![image](https://user-images.githubusercontent.com/85208391/202756997-a6481fde-9d4e-4429-8d3b-ce0478cb0620.png)
+
 
 
 
