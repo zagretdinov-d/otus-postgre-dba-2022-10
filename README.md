@@ -107,7 +107,11 @@ CREATE DATABASE
 
 ![image](https://user-images.githubusercontent.com/85208391/202761058-8f25dd96-7148-4e3d-aeb6-cda469bc973b.png)
 
+![image](https://user-images.githubusercontent.com/85208391/202761353-36c71d68-5a87-4f0d-9141-714e94ae7938.png)
 
+![image](https://user-images.githubusercontent.com/85208391/202761469-ab309f59-7c05-4cb6-969b-c5bd0c252138.png)
+
+![image](https://user-images.githubusercontent.com/85208391/202761801-4fc2ebc2-dc8c-48bc-a5d8-6a82b62a92e4.png)
 
 
 
