@@ -82,15 +82,11 @@ CREATE DATABASE
 
 Далее прописываю все данные удаленной машины на zabbix сервер.
 
-В результате получаю необходимые мне графики
-размер диска и сколько занята пространства.
+В результате получаю необходимый мне график
 
-![image](https://user-images.githubusercontent.com/85208391/202593069-83e1da74-77d6-4f1d-80e0-77c34e597a1f.png)
+![image](https://user-images.githubusercontent.com/85208391/202597793-2f81a477-f7c8-423e-af67-66cbb7d28fef.png)
 
-
-
-
-
+то есть все Transactions per second (TPS) я буду наблюдать в этой таблице
 
 
 
