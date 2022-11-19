@@ -238,4 +238,7 @@ latency stddev = 22.417 ms
 initial connection time = 27.032 ms
 tps = 548.570043 (without initial connection time)
 ```
+![image](https://user-images.githubusercontent.com/85208391/202844010-1e0a2e75-0ba7-4110-9095-2f664d193ca3.png)
+![image](https://user-images.githubusercontent.com/85208391/202844023-c4231e6f-c84c-43f1-b574-8ea7014d6708.png)
+
 
