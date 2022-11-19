@@ -162,6 +162,46 @@ autovacuum_max_workers = 3
 ```
 sudo -u postgres pgbench -c8 -P 5 -T 1200 -U postgres postgres
 ```
+
+* Результат
+```
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 8
+number of threads: 1
+duration: 1200 s
+number of transactions actually processed: 708151
+latency average = 13.554 ms
+latency stddev = 20.816 ms
+initial connection time = 28.082 ms
+tps = 590.127940 (without initial connection time)
+```
 ![image](https://user-images.githubusercontent.com/85208391/202839629-6fe08303-a7c1-47b3-a1d4-d8284be6e68e.png)
 ![image](https://user-images.githubusercontent.com/85208391/202839602-84a9f1f5-7737-4e09-b7f6-eda9e7c4d524.png)
 
+
+### Второй запуск
+Изменяю параметры конфигурации
+```
+autovacuum_naptime = 30min
+autovacuum_vacuum_scale_factor = 0.1
+autovacuum_vacuum_threshold = 50
+autovacuum_analyze_scale_factor = 0.1
+autovacuum_analyze_threshold = 50
+autovacuum_max_workers = 4
+```
+```
+sudo -u postgres pgbench -c8 -P 5 -T 1200 -U postgres postgres
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 8
+number of threads: 1
+duration: 1200 s
+number of transactions actually processed: 674850
+latency average = 14.224 ms
+latency stddev = 21.895 ms
+initial connection time = 26.833 ms
+tps = 562.378702 (without initial connection time)
+```
