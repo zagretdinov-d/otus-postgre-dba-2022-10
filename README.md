@@ -100,65 +100,65 @@ ___Далее прописываю все данные удаленной маш
 ![image](https://user-images.githubusercontent.com/85208391/202834208-5c73d3ea-3088-4091-941c-06e036b1e18f.png)
 ![image](https://user-images.githubusercontent.com/85208391/202834236-7dd5067c-4a20-44ff-b6b2-732dafb82c36.png)
 
+___Закончил настраивать zabbix. Перехожу к параметрам postgresql.__
+  * изменяю параметры настройки PostgreSQL полученные из материалов занятий
+  
+  /etc/postgresql/14/main/postgresql.conf
 
+  ```
+  max_connections = 40
+shared_buffers = 1GB
+effective_cache_size = 3GB
+maintenance_work_mem = 512MB
+checkpoint_completion_target = 0.9
+wal_buffers = 16MB
+default_statistics_target = 500
+random_page_cost = 4
+effective_io_concurrency = 2
+work_mem = 6553kB
+min_wal_size = 4GB
+max_wal_size = 16GB
+```
 
+* перезагружаем кластер
+```
+sudo pg_ctlcluster 14 main restart
+```
+___Процесс выполнения pgbench -i devops.___
+```
+damir@postgres-node-2:~$ sudo -u postgres pgbench -i devops
+dropping old tables...
+NOTICE:  table "pgbench_accounts" does not exist, skipping
+NOTICE:  table "pgbench_branches" does not exist, skipping
+NOTICE:  table "pgbench_history" does not exist, skipping
+NOTICE:  table "pgbench_tellers" does not exist, skipping
+creating tables...
+generating data (client-side)...
+100000 of 100000 tuples (100%) done (elapsed 0.10 s, remaining 0.00 s)
+vacuuming...
+creating primary keys...
+done in 0.45 s (drop tables 0.00 s, create tables 0.01 s, client-side generate 0.27 s, vacuum 0.09 s, primary keys 0.08 s).
+damir@postgres-node-2:~$ 
+```
+### Первый запуск
 
-то есть все Transactions per second (TPS) я буду наблюдать в этой таблице
+* Добавляю следующие параметры 
+```
+vacuum_cost_delay = 0
+vacuum_cost_page_hit = 0
+vacuum_cost_page_miss = 5
+vacuum_cost_page_dirty = 5
+vacuum_cost_limit = 200
 
-
-![image](https://user-images.githubusercontent.com/85208391/202756997-a6481fde-9d4e-4429-8d3b-ce0478cb0620.png)
-
-![image](https://user-images.githubusercontent.com/85208391/202756813-3e573a49-c38a-4f1b-bfde-5cec2f4fda75.png)
-
-![image](https://user-images.githubusercontent.com/85208391/202759350-c07dec25-5b7c-46cf-88ee-76a3e5499f06.png)
-
-![image](https://user-images.githubusercontent.com/85208391/202759795-b582f346-e89f-472d-90d3-7f151a0e5f7b.png)
-
-![image](https://user-images.githubusercontent.com/85208391/202760279-85f50eb8-3aa6-4bcb-953d-886694835c72.png)
-
-![image](https://user-images.githubusercontent.com/85208391/202760794-cedd3668-5e69-41c6-86fa-5d4903cd91d4.png)
-
-![image](https://user-images.githubusercontent.com/85208391/202761058-8f25dd96-7148-4e3d-aeb6-cda469bc973b.png)
-
-![image](https://user-images.githubusercontent.com/85208391/202761353-36c71d68-5a87-4f0d-9141-714e94ae7938.png)
-
-![image](https://user-images.githubusercontent.com/85208391/202761986-f56beaad-1300-4c82-805a-d14525328694.png)
-
+autovacuum_naptime = 1min
+autovacuum_vacuum_scale_factor = 0.2
+autovacuum_vacuum_threshold = 50
+autovacuum_analyze_scale_factor = 0.1
+autovacuum_analyze_threshold = 50
+autovacuum_max_workers = 3
+```
+* запускаю pgbench -c8 -P 5 -T 1200 -U postgres devops вакуума
 
 ```
 sudo -u postgres pgbench -c8 -P 5 -T 1200 -U postgres postgres
-
-transaction type: <builtin: TPC-B (sort of)>
-scaling factor: 1
-query mode: simple
-number of clients: 8
-number of threads: 1
-duration: 1200 s
-number of transactions actually processed: 679791
-latency average = 14.120 ms
-latency stddev = 22.093 ms
-initial connection time = 26.876 ms
-tps = 566.496404 (without initial connection time)
 ```
-
-изменю параметры vacuum
-```
-transaction type: <builtin: TPC-B (sort of)>
-scaling factor: 1
-query mode: simple
-number of clients: 8
-number of threads: 1
-duration: 1200 s
-number of transactions actually processed: 676985
-latency average = 14.179 ms
-latency stddev = 21.792 ms
-initial connection time = 27.734 ms
-tps = 564.123115 (without initial connection time)
-```
-
-
-
-
-
-
-
