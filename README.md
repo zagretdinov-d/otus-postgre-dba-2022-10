@@ -7,6 +7,7 @@
   * настроить параметры autovacuum для достижения максимального уровня устойчивой производительности
 
 ### Решение:
+Создаю GCE инстанс типа e2-medium и standard disk 10GB
 ```
 damir@Damir:~$ gcloud beta compute instances create postgres-node-2 \
 --machine-type=e2-medium \
@@ -26,21 +27,26 @@ damir@Damir:~$ gcloud beta compute instances create postgres-node-2 \
 damir@postgres-node-2:~$ sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y -q && sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - && sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt -y install postgresql-14
 ```
 
-
-Проверяю
+___Проверяю___
+```
 damir@postgres-node-2:~$ pg_lsclusters
 Ver Cluster Port Status Owner    Data directory              Log file
 14  main    5432 online postgres /var/lib/postgresql/14/main /var/log/postgresql/postgresql-14-main.log
-damir@postgres-node-2:~$ 
+```
 
-Теперь предворительно для себя я настрою мониторинг на zabbix, где буду просматривать графики размера базы данных, занятое пространства на диске, используемое количество оперативной памяти.
+___Для построения графика и получений значений предворительно настрою мониторинг на zabbix.___
 
-У меня имеется в облаке уже рабочий мой zabbix. В крации в качестве дополнения распишу как настроил zabbix-agent созданныю машину.
-ставлю zabbix-agent
+У меня имеется в облаке уже рабочий zabbix. В крации в качестве дополнения настраиваю zabbix-agent на созданной GCE инстанс.
+
+___Установка___
+
+```
 wget https://repo.zabbix.com/zabbix/5.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_5.0-1+focal_all.deb
 sudo dpkg -i zabbix-release_5.0-1+focal_all.deb
 sudo apt install zabbix-agent
-Проверяю порт 10050
+```
+___Проверяю порт 10050___
+```
 damir@postgres-node-2:~$ sudo netstat -pnltu
 Active Internet connections (only servers)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
@@ -54,21 +60,26 @@ udp        0      0 127.0.0.53:53           0.0.0.0:*                           
 udp        0      0 10.186.0.3:68           0.0.0.0:*                           459/systemd-network 
 udp        0      0 127.0.0.1:323           0.0.0.0:*                           1372/chronyd        
 udp6       0      0 ::1:323                 :::*                                1372/chronyd
-
-этот же порт я добавляю в облаке GCE 
+```
+___Добавляю в облаке GCE___ 
 
 ![image](https://user-images.githubusercontent.com/85208391/202591961-ae4862ab-4a5f-4013-86ef-f3d47903338d.png)
 
 
-Создаю пользователя в postgres которого буду прописывать на zabbix сервере
-postgres=# CREATE USER zbx_monitor WITH PASSWORD '51324ZXcv' INHERIT;
+___Создаю пользователя в postgres которого буду прописывать на zabbix сервере___
+```
+postgres=# CREATE USER zbx_monitor WITH PASSWORD 'password' INHERIT;
 CREATE ROLE
 postgres=# GRANT pg_monitor TO zbx_monitor;
 GRANT ROLE
+```
 
 Отредактируйте pg_hba.conf, чтобы разрешить соединения с агентом Zabbix
+
+```
 host    all             zbx_monitor     127.0.0.1/32            trust
 host    all             zbx_monitor     0.0.0.0/0               md5
+```
 
 Также в postgresql.conf исправлю.
 listen_addresses = '*'
@@ -112,12 +123,36 @@ CREATE DATABASE
 ![image](https://user-images.githubusercontent.com/85208391/202761986-f56beaad-1300-4c82-805a-d14525328694.png)
 
 
+```
+sudo -u postgres pgbench -c8 -P 5 -T 1200 -U postgres postgres
 
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 8
+number of threads: 1
+duration: 1200 s
+number of transactions actually processed: 679791
+latency average = 14.120 ms
+latency stddev = 22.093 ms
+initial connection time = 26.876 ms
+tps = 566.496404 (without initial connection time)
+```
 
-
-
-
-
+изменю параметры vacuum
+```
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 8
+number of threads: 1
+duration: 1200 s
+number of transactions actually processed: 676985
+latency average = 14.179 ms
+latency stddev = 21.792 ms
+initial connection time = 27.734 ms
+tps = 564.123115 (without initial connection time)
+```
 
 
 
