@@ -96,8 +96,11 @@ CREATE DATABASE
 ___Далее прописываю все данные удаленной машины на zabbix сервер.___
 
 В результате получаю необходимый мне график
+![image](https://user-images.githubusercontent.com/85208391/202834208-5c73d3ea-3088-4091-941c-06e036b1e18f.png)
+![image](https://user-images.githubusercontent.com/85208391/202834236-7dd5067c-4a20-44ff-b6b2-732dafb82c36.png)
 
-![image](https://user-images.githubusercontent.com/85208391/202597793-2f81a477-f7c8-423e-af67-66cbb7d28fef.png)
+
+
 
 то есть все Transactions per second (TPS) я буду наблюдать в этой таблице
 
