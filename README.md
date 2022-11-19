@@ -74,28 +74,26 @@ postgres=# GRANT pg_monitor TO zbx_monitor;
 GRANT ROLE
 ```
 
-Отредактируйте pg_hba.conf, чтобы разрешить соединения с агентом Zabbix
+___Отредактируйте pg_hba.conf, чтобы разрешить соединения с агентом Zabbix.___
 
 ```
 host    all             zbx_monitor     127.0.0.1/32            trust
 host    all             zbx_monitor     0.0.0.0/0               md5
 ```
 
-Также в postgresql.conf исправлю.
+___Также в postgresql.conf исправлю.___
+```
 listen_addresses = '*'
+```
 
-Даллее загружаю необходимые шаблоны  pgsql.sql и настраиваю конфиг zabbix-agent. перезагружаю postgres и zabbix-agent
+__Загружаю необходимые шаблоны  pgsql.sql, настраиваю конфиг zabbix-agent и перезагружаю.__
 
-Буду работать с базой devops её же и создам
-postgres@postgres-node-2:/home/damir$ psql
-psql (14.6 (Ubuntu 14.6-1.pgdg20.04+1))
-Type "help" for help.
-
+___Создаю базу которую буду мониторить___
+```
 postgres=# create database devops;
 CREATE DATABASE
-
-
-Далее прописываю все данные удаленной машины на zabbix сервер.
+```
+___Далее прописываю все данные удаленной машины на zabbix сервер.___
 
 В результате получаю необходимый мне график
 
