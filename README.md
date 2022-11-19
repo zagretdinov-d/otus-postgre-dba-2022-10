@@ -100,6 +100,8 @@ ___Далее прописываю все данные удаленной маш
 ![image](https://user-images.githubusercontent.com/85208391/202834208-5c73d3ea-3088-4091-941c-06e036b1e18f.png)
 ![image](https://user-images.githubusercontent.com/85208391/202834236-7dd5067c-4a20-44ff-b6b2-732dafb82c36.png)
 
+
+
 ___Закончил настраивать zabbix. Перехожу к параметрам postgresql.__
   * изменяю параметры настройки PostgreSQL полученные из материалов занятий
   
@@ -180,6 +182,8 @@ tps = 590.127940 (without initial connection time)
 ![image](https://user-images.githubusercontent.com/85208391/202839629-6fe08303-a7c1-47b3-a1d4-d8284be6e68e.png)
 ![image](https://user-images.githubusercontent.com/85208391/202839602-84a9f1f5-7737-4e09-b7f6-eda9e7c4d524.png)
 
+- Транзакции упали с 800 до 500 через 5 минут
+- База выросла до 60МБ
 
 ### Второй запуск
 Изменяю параметры конфигурации
@@ -208,4 +212,30 @@ tps = 562.378702 (without initial connection time)
 ![image](https://user-images.githubusercontent.com/85208391/202841560-3cd966a8-c9dc-445a-8f5d-fe3ca10eab68.png)
 ![image](https://user-images.githubusercontent.com/85208391/202841627-9227b062-f828-4f8c-825a-5e349a268e8a.png)
 
+### Третий запуск - более агресивный
+Изменяю параметры конфигурации
+```
+autovacuum_naptime = 20
+autovacuum_vacuum_scale_factor = 0.05
+autovacuum_vacuum_threshold = 20
+autovacuum_analyze_scale_factor = 0.05
+autovacuum_analyze_threshold = 20
+autovacuum_max_workers = 10
+autovacuum_vacuum_insert_threshold = 500
+autovacuum_vacuum_insert_scale_factor = 0.05
+```
+
+```
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 8
+number of threads: 1
+duration: 1200 s
+number of transactions actually processed: 658327
+latency average = 14.581 ms
+latency stddev = 22.417 ms
+initial connection time = 27.032 ms
+tps = 548.570043 (without initial connection time)
+```
 
