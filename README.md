@@ -163,8 +163,3 @@ autovacuum_max_workers = 3
 sudo -u postgres pgbench -c8 -P 5 -T 1200 -U postgres postgres
 ```
 
-![image](https://user-images.githubusercontent.com/85208391/202839411-d1d94710-d7c1-4f14-9028-c616856d11a0.png)
-
-![image](https://user-images.githubusercontent.com/85208391/202839434-8f1f81c7-005f-4d8c-8932-457286798520.png)
-
-
