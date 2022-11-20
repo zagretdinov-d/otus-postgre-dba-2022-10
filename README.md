@@ -60,10 +60,18 @@ sudo -u postgres psql
   done in 0.43 s (drop tables 0.01 s, create tables 0.01 s, client-side generate 0.24 s, vacuum 0.09 s, primary keys 0.08 s).
 
   ```
+
+  - _____Запускаю нагрузку с помощью утилиты pgbench._____
   ```
   damir@postgres-node-2:~$ sudo -u postgres pgbench -P 30 -T 600
   pgbench (14.6 (Ubuntu 14.6-1.pgdg20.04+1))
   starting vacuum...end.
+  progress: 450.0 s, 574.1 tps, lat 1.741 ms stddev 0.272
+  progress: 480.0 s, 559.4 tps, lat 1.787 ms stddev 0.255
+  progress: 510.0 s, 598.6 tps, lat 1.670 ms stddev 0.298
+  progress: 540.0 s, 523.7 tps, lat 1.909 ms stddev 0.404
+  progress: 570.0 s, 573.8 tps, lat 1.742 ms stddev 0.254
+  progress: 600.0 s, 558.8 tps, lat 1.789 ms stddev 0.260
   transaction type: <builtin: TPC-B (sort of)>
   scaling factor: 1
   query mode: simple
@@ -76,6 +84,7 @@ sudo -u postgres psql
   initial connection time = 4.285 ms
   tps = 573.105206 (without initial connection time)
   ```
+  - _____посмотрю log postgres_____
   ```
   damir@postgres-node-2:~$ tail -f  /var/log/postgresql/postgresql-14-main.log
   2022-11-20 08:59:00.028 UTC [178435] LOG:  checkpoint starting: time
@@ -87,10 +96,15 @@ sudo -u postgres psql
   2022-11-20 09:00:30.055 UTC [178435] LOG:  checkpoint starting: time
   2022-11-20 09:00:57.059 UTC [178435] LOG:  checkpoint complete: wrote 1808 buffers (1.4%); 0 WAL file(s) added, 0 removed, 1 recycled; write=26.977 s, sync=0.007 s, total=27.005 s; sync files=6, longest=0.004 s, average=0.002 s; distance=19767 kB, estimate=20800 kB
 
+
+
+
+
+
 ![image](https://user-images.githubusercontent.com/85208391/202900217-2ae22bdf-2601-49c9-ab2a-6c4ba4313597.png)
 
 
-- 10 минут c помощью утилиты pgbench подавайте нагрузку.
+
 
 - Измерьте, какой объем журнальных файлов был сгенерирован за это время. Оцените, какой объем приходится в среднем на одну контрольную точку.
 
