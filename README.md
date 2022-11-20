@@ -87,6 +87,8 @@ sudo -u postgres psql
   2022-11-20 09:00:30.055 UTC [178435] LOG:  checkpoint starting: time
   2022-11-20 09:00:57.059 UTC [178435] LOG:  checkpoint complete: wrote 1808 buffers (1.4%); 0 WAL file(s) added, 0 removed, 1 recycled; write=26.977 s, sync=0.007 s, total=27.005 s; sync files=6, longest=0.004 s, average=0.002 s; distance=19767 kB, estimate=20800 kB
 
+![image](https://user-images.githubusercontent.com/85208391/202900217-2ae22bdf-2601-49c9-ab2a-6c4ba4313597.png)
+
 
 - 10 минут c помощью утилиты pgbench подавайте нагрузку.
 
