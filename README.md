@@ -1,12 +1,14 @@
-# Lesson 8
-### Тема: Настройка autovacuum с учетом оптимальной производительности
+# Lesson 9
+### Тема: Работа с журналами
 
 * __Цель:__
 
-  * запустить нагрузочный тест pgbench
-  * настроить параметры autovacuum для достижения максимального уровня устойчивой производительности
+  * уметь работать с журналами и контрольными точками
+  * уметь настраивать параметры журналов
 
 ### Решение:
+* __создаю GCE инстанс типа e2-medium__
+```
 damir@Damir:~$ gcloud beta compute instances create postgres-node-2 \
 > --machine-type=e2-medium \
 > --image-family ubuntu-2004-lts \
@@ -15,3 +17,4 @@ damir@Damir:~$ gcloud beta compute instances create postgres-node-2 \
 > --boot-disk-type=pd-ssd \
 > --tags=postgres \
 > --restart-on-failure
+```
