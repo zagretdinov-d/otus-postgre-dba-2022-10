@@ -322,7 +322,45 @@ postgres=# SELECT pg_relation_filepath('t1');
 
 postgres=# 
 ```
+- __отключаю кластер__
+```
+sudo -u postgres pg_ctlcluster 14 main stop
+```
+- __меняю несколько байтов в странице. Стираю из заголовка LSN последней журнальной записи__
+```
+damir@postgres-node-2:~$ sudo dd if=/dev/zero of=/var/lib/postgresql/14/main/base/13726/16384 oflag=dsync conv=notrunc bs=1 count=8
+8+0 records in
+8+0 records out
+8 bytes copied, 0.00760931 s, 1.1 kB/s
+```
+- __запускаю кластер__
+sudo -u postgres pg_ctlcluster 14 main start
 
+- __выполняю запрос__
 
-Cоздайте таблицу. Вставьте несколько значений. Выключите кластер. Измените пару байт в таблице. Включите кластер и сделайте выборку из таблицы. Что и почему произошло? как проигнорировать ошибку и продолжить работу?__
+```postgres=# select i from t1;
+WARNING:  page verification failed, calculated checksum 22072 but expected 63745
+ERROR:  invalid page in block 0 of relation base/13726/16384
+postgres=# 
+```
+> ___ошибка данные повреждены, это свидетельствует о том что нарушена целостность файловой системы СУБД другими словами испортили таьлицу.___
 
+- __устанавливаю параметр ignore_checksum_failure__ и выполняю
+
+```
+postgres=# select i from t1;
+WARNING:  page verification failed, calculated checksum 22072 but expected 63745
+ERROR:  invalid page in block 0 of relation base/13726/16384
+postgres=# SET ignore_checksum_failure = on;
+SET
+postgres=# select i from t1;
+WARNING:  page verification failed, calculated checksum 22072 but expected 63745
+ i 
+---
+ 1
+ 2
+ 3
+(3 rows)
+```
+
+> __данный параметр позволил обойти ошибку и прочитать испорченную таблицу и получить искаженные данные.
