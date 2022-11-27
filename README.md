@@ -323,10 +323,87 @@ sudo -u postgres psql
    2022-11-27 12:46:39.133 UTC [53622] postgres@hw10 STATEMENT:  update hw10 set i = 1 where i = 3;
    ```
 
+   * выполняю rollback
 
+* __Могут ли две транзакции, выполняющие единственную команду UPDATE одной и той же таблицы (без where), заблокировать друг друга?__
+__Ответ:__ возможно да, если одна команда будет обновлять строки таблицы в прямом порядке, а другая - в обратном. Далее расмотрю это в примере.
 
+* __Задание со звездочкой: Взаимоблокировка 2-х транзакций, выполняющих UPDATE одной и той же таблицы (без where)__
+> Пример
+В качестве примера для иследования создам таблицу трех городов Казахстана
+создаю таблицу kz.city в своей же бд hw10:
+```
+create table public.kz (c_id integer, c_name text, people integer);
+insert into public.kz (c_id, c_name, people) 
+values 
+  (1, 'Astana', 38505000),
+  (2, 'Karaganda', 28125000),
+  (3, 'Almaty', 42125000);
+```
+   * Session-1.
 
+```
+hw10=# begin;
+BEGIN
+hw10=*# declare cur1 cursor for 
+hw10-*# select c_id, c_name, people from public.kz 
+hw10-*# order by c_id for update;
+DECLARE CURSOR
+```
 
+* Session-2
+```
+hw10=# begin;
+BEGIN
+hw10=*# declare cur2 cursor for 
+hw10-*# select c_id, c_name, people from public.kz 
+hw10-*# order by c_id desc for update;
+DECLARE CURSOR
+```
+* Session-1
+```
+hw10=*# fetch cur1;
+ c_id | c_name |  people  
+------+--------+----------
+    1 | Astana | 38505000
+(1 row)
+```
+* Session-2
+```
+hw10=*# fetch cur2;
+ c_id | c_name |  people  
+------+--------+----------
+    3 | Almaty | 42125000
+(1 row)
+```
+* Session-1
+```
+hw10=*# fetch cur1;
+ c_id |  c_name   |  people  
+------+-----------+----------
+    2 | Karaganda | 28125000
+(1 row)
+```
+* Session-2
+```
+hw10=*# fetch cur2;
+ c_id |  c_name   |  people  
+------+-----------+----------
+    2 | Karaganda | 28125000
+(1 row)
+```
+* Session-1
+```
+hw10=*# fetch cur1;
+ERROR:  deadlock detected
+DETAIL:  Process 55904 waits for ShareLock on transaction 758; blocked by process 55951.
+Process 55951 waits for ShareLock on transaction 757; blocked by process 55904.
+HINT:  See server log for query details.
+CONTEXT:  while locking tuple (0,3) in relation "kz"
+```
+> при последней команде fetch cur1; произошла взаимоблокировка
+Подитожу - если одна команда будет обновлять строки в одном порядке, а другая - в другом, они могут взаимозаблокироваться.
+Это может произойти, если для команд будут построены разные планы выполнения, например, одна будет читать таблицу последовательно, а другая - по индексу.
 
 
 
