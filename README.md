@@ -109,7 +109,7 @@ sudo -u postgres psql
   hw10=*# SELECT txid_current(), pg_backend_pid();
    txid_current | pg_backend_pid 
   --------------+----------------
-            741 |          49871
+            737 |          51569
   (1 row)
 
 
@@ -123,7 +123,7 @@ sudo -u postgres psql
   hw10=*# SELECT txid_current(), pg_backend_pid();
    txid_current | pg_backend_pid 
   --------------+----------------
-            742 |          49899
+            738 |          51587
   (1 row)
 
 
@@ -136,7 +136,7 @@ sudo -u postgres psql
   hw10=*# SELECT txid_current(), pg_backend_pid();
    txid_current | pg_backend_pid 
   --------------+----------------
-            743 |          49911
+            739 |          51702
   (1 row)
 
   update hw10 set i = 5 where i = 1;
@@ -144,23 +144,25 @@ sudo -u postgres psql
     * _проверяю лог postgres просматириваю информацию о блокировках._
   ```
   damir@postgres-node-1:~$ cat /var/log/postgresql/postgresql-14-main.log
-  2022-11-27 05:09:27.168 UTC [48369] postgres@hw10 LOG:  process 48369 still waiting for ShareLock on transaction 742 after 200.274 ms
-  2022-11-27 05:09:27.168 UTC [48369] postgres@hw10 DETAIL:  Process holding the lock: 48192. Wait queue: 48369.
-  2022-11-27 05:09:27.168 UTC [48369] postgres@hw10 CONTEXT:  while updating tuple (0,1) in relation "hw10"
-  2022-11-27 05:09:27.168 UTC [48369] postgres@hw10 STATEMENT:  update hw10 set i = 5 where i = 1;
-  2022-11-27 05:09:39.263 UTC [48373] postgres@hw10 LOG:  process 48373 still waiting for ExclusiveLock on tuple (0,1) of relation 16385 of database 16384 after 200.185 ms
-  2022-11-27 05:09:39.263 UTC [48373] postgres@hw10 DETAIL:  Process holding the lock: 48369. Wait queue: 48373.
-  2022-11-27 05:09:39.263 UTC [48373] postgres@hw10 STATEMENT:  update hw10 set i = 5 where i = 1;
-  2022-11-27 05:10:46.595 UTC [48369] postgres@hw10 LOG:  process 48369 acquired ShareLock on transaction 742 after 79628.086 ms
-  2022-11-27 05:10:46.595 UTC [48369] postgres@hw10 CONTEXT:  while updating tuple (0,1) in relation "hw10"
-  2022-11-27 05:10:46.595 UTC [48369] postgres@hw10 STATEMENT:  update hw10 set i = 5 where i = 1;
-  2022-11-27 05:10:46.596 UTC [48373] postgres@hw10 LOG:  process 48373 acquired ExclusiveLock on tuple (0,1) of relation 16385 of database 16384 after 67532.729 ms
-  2022-11-27 05:10:46.596 UTC [48373] postgres@hw10 STATEMENT:  update hw10 set i = 5 where i = 1;
-  2022-11-27 05:10:46.796 UTC [48373] postgres@hw10 LOG:  process 48373 still waiting for ShareLock on transaction 743 after 200.165 ms
-  2022-11-27 05:10:46.796 UTC [48373] postgres@hw10 DETAIL:  Process holding the lock: 48369. Wait queue: 48373.
-  2022-11-27 05:10:46.796 UTC [48373] postgres@hw10 CONTEXT:  while updating tuple (0,1) in relation "hw10"
-  2022-11-27 05:10:46.796 UTC [48373] postgres@hw10 STATEMENT:  update hw10 set i = 5 where i = 1;
+  2022-11-27 09:28:48.214 UTC [51587] postgres@hw10 LOG:  process 51587 still waiting for ShareLock on transaction 737 after 200.167 ms
+  2022-11-27 09:28:48.214 UTC [51587] postgres@hw10 DETAIL:  Process holding the lock: 51569. Wait queue: 51587.
+  2022-11-27 09:28:48.214 UTC [51587] postgres@hw10 CONTEXT:  while updating tuple (0,1) in relation "hw10"
+  2022-11-27 09:28:48.214 UTC [51587] postgres@hw10 STATEMENT:  update hw10 set i = 5 where i = 1;
+  2022-11-27 09:43:17.912 UTC [51702] postgres@hw10 LOG:  process 51702 still waiting for ExclusiveLock on tuple (0,1) of relation 16385 of database 16384 after 200.174 ms
+  2022-11-27 09:43:17.912 UTC [51702] postgres@hw10 DETAIL:  Process holding the lock: 51587. Wait queue: 51702.
+  2022-11-27 09:43:17.912 UTC [51702] postgres@hw10 STATEMENT:  update hw10 set i = 5 where i = 1;
+  2022-11-27 10:05:01.592 UTC [51587] postgres@hw10 LOG:  process 51587 acquired ShareLock on transaction 737 after 2173577.250 ms
+  2022-11-27 10:05:01.592 UTC [51587] postgres@hw10 CONTEXT:  while updating tuple (0,1) in relation "hw10"
+  2022-11-27 10:05:01.592 UTC [51587] postgres@hw10 STATEMENT:  update hw10 set i = 5 where i = 1;
+  2022-11-27 10:05:01.592 UTC [51702] postgres@hw10 LOG:  process 51702 acquired ExclusiveLock on tuple (0,1) of relation 16385 of database 16384 after 1303879.529 ms
+  2022-11-27 10:05:01.592 UTC [51702] postgres@hw10 STATEMENT:  update hw10 set i = 5 where i = 1;
+  2022-11-27 10:05:01.792 UTC [51702] postgres@hw10 LOG:  process 51702 still waiting for ShareLock on transaction 738 after 200.159 ms
+  2022-11-27 10:05:01.792 UTC [51702] postgres@hw10 DETAIL:  Process holding the lock: 51587. Wait queue: 51702.
+  2022-11-27 10:05:01.792 UTC [51702] postgres@hw10 CONTEXT:  while updating tuple (0,1) in relation "hw10"
+  2022-11-27 10:05:01.792 UTC [51702] postgres@hw10 STATEMENT:  update hw10 set i = 5 where i = 1;
   ```
+  ну здесь я наблюдаю транзакция по созданию индекса отрабатывается значительно дольше 200mc.
+
 
     * _просматриваю блокировки для транзакции для каждой сессий._
       * Проверяю первую сессию.
@@ -168,32 +170,32 @@ sudo -u postgres psql
 
       
       ```
-      hw10=*# SELECT * FROM locks WHERE pid = 48810;
+      hw10=*# SELECT * FROM locks WHERE pid = 51569;
         pid  |   locktype    |  lockid  |       mode       | granted 
       -------+---------------+----------+------------------+---------
-       48810 | relation      | pg_locks | AccessShareLock  | t
-       48810 | relation      | locks    | AccessShareLock  | t
-       48810 | relation      | hw10     | RowExclusiveLock | t
-       48810 | virtualxid    | 4/92     | ExclusiveLock    | t
-       48810 | transactionid | 747      | ExclusiveLock    | t
+       51569 | relation      | pg_locks | AccessShareLock  | t
+       51569 | relation      | locks    | AccessShareLock  | t
+       51569 | relation      | hw10     | RowExclusiveLock | t
+       51569 | virtualxid    | 4/92     | ExclusiveLock    | t
+       51569 | transactionid | 747      | ExclusiveLock    | t
       (5 rows)
       ```
-      > Описываю свои наблюдения, то есть pid процесса, который запросил 5 блокировак 2 блокировки на отношения - locks и таблицу pg_locks + 1 блокировка виртуального номера транзакции. в режиме чтения (AccessShareLock) и получаю их - granted = true
+      > Описываю свои наблюдения, то есть pid процесса, который запросил 5 блокировак 2 блокировки на отношения - locks и таблицу pg_locks + 1 блокировка виртуального номера транзакции. В режиме чтения (AccessShareLock) и получаю их - granted = true
       Наблюдаю тип relation для hw10 в режиме RowExclusiveLock - устанавливается на изменяемое отношения.
       Наблюдаю тип virtualxid и transactionid в режиме ExclusiveLock - удерживаются каждой транзакцией для самой себя.
       
             
       * Проверяю вторую сессию.
       ```
-       hw10=*# SELECT * FROM locks WHERE pid = 49899
+       hw10=*# SELECT * FROM locks WHERE pid = 51587
         hw10-*# ;
         pid  |   locktype    | lockid |       mode       | granted 
       -------+---------------+--------+------------------+---------
-       49899 | relation      | hw10   | RowExclusiveLock | t
-       49899 | virtualxid    | 5/5    | ExclusiveLock    | t
-       49899 | transactionid | 742    | ExclusiveLock    | t
-       49899 | tuple         | hw10:1 | ExclusiveLock    | t
-       49899 | transactionid | 741    | ShareLock        | f
+       51587 | relation      | hw10   | RowExclusiveLock | t
+       51587 | virtualxid    | 5/5    | ExclusiveLock    | t
+       51587 | transactionid | 742    | ExclusiveLock    | t
+       51587 | tuple         | hw10:1 | ExclusiveLock    | t
+       51587 | transactionid | 741    | ShareLock        | f
       (5 rows)
       ```
       > Транзакция ожидает получение блокировки типа transactionid в режиме ShareLock для первой транзакции.
@@ -204,16 +206,132 @@ sudo -u postgres psql
 
       * Проверяю третью сессию.
       ```
-      hw10=*# SELECT * FROM locks WHERE pid = 49911;
+      hw10=*# SELECT * FROM locks WHERE pid = 51702;
         pid  |   locktype    | lockid |       mode       | granted 
       -------+---------------+--------+------------------+---------
-       49911 | relation      | hw10   | RowExclusiveLock | t
-       49911 | virtualxid    | 6/2    | ExclusiveLock    | t
-       49911 | transactionid | 743    | ExclusiveLock    | t
-       49911 | tuple         | hw10:1 | ExclusiveLock    | f
+       51702 | relation      | hw10   | RowExclusiveLock | t
+       51702 | virtualxid    | 6/2    | ExclusiveLock    | t
+       51702 | transactionid | 743    | ExclusiveLock    | t
+       51702 | tuple         | hw10:1 | ExclusiveLock    | f
        (4 rows)
        ```
       > Транзакция ожидает получение блокировки типа tuple для обновляемой строки
-      Теперь завершаю первую сессию к примеру выполню  rollback.
-      ![image](https://user-images.githubusercontent.com/85208391/204126254-96cea486-e173-40ec-b79d-84faae71b19c.png)
+      
+        * Общий вид текущих ожиданий просматриваю в pg_stat_activity
+      
+      ```
+      hw10=*# SELECT pid, wait_event_type, wait_event, pg_blocking_pids(pid) FROM pg_stat_activity WHERE backend_type = 'client backend';
+        pid  | wait_event_type |  wait_event   | pg_blocking_pids 
+      -------+-----------------+---------------+------------------
+       51569 |                 |               | {}
+       51587 | Lock            | transactionid | {51569}
+       51702 | Lock            | tuple         | {51587}
+      (3 rows)
+      ```
+      
+        * Теперь завершаю первую сессию выполню  rollback.
 
+      ```
+      hw10=# SELECT * FROM locks WHERE pid = 51569;
+       pid | locktype | lockid | mode | granted 
+      -----+----------+--------+------+---------
+      (0 rows)
+
+      hw10=# SELECT * FROM locks WHERE pid = 51587;
+        pid  |   locktype    | lockid |       mode       | granted 
+      -------+---------------+--------+------------------+---------
+       51587 | relation      | hw10   | RowExclusiveLock | t
+       51587 | virtualxid    | 5/2    | ExclusiveLock    | t
+       51587 | transactionid | 738    | ExclusiveLock    | t
+       (3 rows)
+
+       hw10=# SELECT * FROM locks WHERE pid = 51702;
+        pid  |   locktype    | lockid |       mode       | granted 
+      -------+---------------+--------+------------------+---------
+       51702 | relation      | hw10   | RowExclusiveLock | t
+       51702 | virtualxid    | 6/2    | ExclusiveLock    | t
+       51702 | transactionid | 738    | ShareLock        | f
+       51702 | tuple         | hw10:1 | ExclusiveLock    | t
+       51702 | transactionid | 739    | ExclusiveLock    | t
+       (5 rows)
+       hw10=# 
+       ```
+      >после фиксации изменений в первой сессии - все блокировки уходят
+      Наблюдаю как вторая транзакция (create index) получает запрошенную блокировку (ShareLock) и выполняет построение индекса и так же при завршении второй транзакции.
+    
+      Делаю rollback во всех сеансах.
+ * __Взаимоблокировка трех транзакций.__
+    
+    * Session-1 
+    ```
+    begin;
+    update hw10 set i = 1 where i = 1;
+    ```
+    * Session-2 
+    ```
+    begin;
+    update hw10 set i = 1 where i = 2;
+    ```
+    * Session-3
+    ```
+    begin;
+    update hw10 set i = 1 where i = 3;
+    ```
+    
+    * Session-1
+    ```
+    update hw10 set i = 1 where i = 2;
+    ```
+    * Session-2
+    ```
+    update hw10 set i = 1 where i = 3;
+    ```
+    * Session-3
+    ```
+    update hw10 set i = 1 where i = 1;
+    ERROR:  deadlock detected
+    DETAIL:  Process 53628 waits for ShareLock on transaction 749; blocked by process 53604.
+    Process 53604 waits for ShareLock on transaction 750; blocked by process 53622.
+    Process 53622 waits for ShareLock on transaction 751; blocked by process 53628.
+    HINT:  See server log for query details.
+    CONTEXT:  while updating tuple (0,1) in relation "hw10"
+    ```
+    >Возникла ошибка Deadlock при попытке обновления, тоесть в трех сессиях две сессии уже висят и в просессе мы запскаем третий что привел к данной ошибки дригими словами возникла блокировка в многопроцессорной обработке.
+
+   * Открываю и смотрю логи.
+   ```
+   damir@postgres-node-1:~$ tail -n 20 /var/log/postgresql/postgresql-14-main.log
+   2022-11-27 12:46:09.163 UTC [53622] postgres@hw10 DETAIL:  Process holding the lock: 53628. Wait queue: 53622.
+   2022-11-27 12:46:09.163 UTC [53622] postgres@hw10 CONTEXT:  while updating tuple (0,3) in relation "hw10"
+   2022-11-27 12:46:09.163 UTC [53622] postgres@hw10 STATEMENT:  update hw10 set i = 1 where i = 3;
+   2022-11-27 12:46:39.131 UTC [53628] postgres@hw10 LOG:  process 53628 detected deadlock while waiting for ShareLock on transaction 749 after 200.209 ms
+   2022-11-27 12:46:39.131 UTC [53628] postgres@hw10 DETAIL:  Process holding the lock: 53604. Wait queue: .
+   2022-11-27 12:46:39.131 UTC [53628] postgres@hw10 CONTEXT:  while updating tuple (0,1) in relation "hw10"
+   2022-11-27 12:46:39.131 UTC [53628] postgres@hw10 STATEMENT:  update hw10 set i = 1 where i = 1;
+   2022-11-27 12:46:39.132 UTC [53628] postgres@hw10 ERROR:  deadlock detected
+   2022-11-27 12:46:39.132 UTC [53628] postgres@hw10 DETAIL:  Process 53628 waits for ShareLock on transaction 749; blocked by process 53604.
+	 Process 53604 waits for ShareLock on transaction 750; blocked by process 53622.
+	 Process 53622 waits for ShareLock on transaction 751; blocked by process 53628.
+	 Process 53628: update hw10 set i = 1 where i = 1;
+	 Process 53604: update hw10 set i = 1 where i = 2;
+	 Process 53622: update hw10 set i = 1 where i = 3;
+   2022-11-27 12:46:39.132 UTC [53628] postgres@hw10 HINT:  See server log for query details.
+   2022-11-27 12:46:39.132 UTC [53628] postgres@hw10 CONTEXT:  while updating tuple (0,1) in relation "hw10"
+   2022-11-27 12:46:39.132 UTC [53628] postgres@hw10 STATEMENT:  update hw10 set i = 1 where i = 1;
+   2022-11-27 12:46:39.133 UTC [53622] postgres@hw10 LOG:  process 53622 acquired ShareLock on transaction 751 after 30169.830 ms
+   2022-11-27 12:46:39.133 UTC [53622] postgres@hw10 CONTEXT:  while updating tuple (0,3) in relation "hw10"
+   2022-11-27 12:46:39.133 UTC [53622] postgres@hw10 STATEMENT:  update hw10 set i = 1 where i = 3;
+   ```
+
+
+
+
+
+
+
+
+
+
+
+      
+  
