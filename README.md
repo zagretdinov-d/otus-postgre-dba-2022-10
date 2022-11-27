@@ -215,4 +215,5 @@ sudo -u postgres psql
        ```
       > Транзакция ожидает получение блокировки типа tuple для обновляемой строки
       Теперь завершаю первую сессию к примеру выполню  rollback.
-      
+      ![image](https://user-images.githubusercontent.com/85208391/204126254-96cea486-e173-40ec-b79d-84faae71b19c.png)
+
