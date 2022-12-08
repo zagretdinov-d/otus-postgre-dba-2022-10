@@ -1,14 +1,16 @@
-# Lesson 10
-### Тема: Механизм блокировок
+# Lesson 13
+### Тема: Нагрузочное тестирование и тюнинг PostgreSQL
 
 * __Цель:__
 
-  * понимать как работает механизм блокировок объектов и строк
+  * сделать нагрузочное тестирование PostgreSQL
+  * настроить параметры PostgreSQL для достижения максимальной производительности
+
 
 ### Решение:
 * __создаю GCE инстанс типа e2-medium__
 ```
-damir@Damir:~$ gcloud beta compute instances create postgres-node-2 \
+damir@Damir:~$ gcloud beta compute instances create postgres-node-3 \
 --machine-type=e2-medium \
 --image-family ubuntu-2004-lts \
 --image-project=ubuntu-os-cloud \
