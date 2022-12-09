@@ -32,7 +32,7 @@ damir@postgres-node-3:~$ sudo apt update && sudo DEBIAN_FRONTEND=noninteractive 
 ```
 * __редактирую /etc/postgresql/14/main/pg_hba.conf и sudo nano /etc/postgresql/14/main/postgresql.conf__
 ```
-host    dbtest          devops          34.118.62.xxx/32            md5
+host    dbtest          devops          0.0.0.0/32            md5
 listen_addresses = '*'
 ```
 * __перезапускаюсь__
@@ -85,10 +85,77 @@ sudo sysbench \
 /usr/share/sysbench/tests/include/oltp_legacy/parallel_prepare.lua \
 run
 ```
+В результате получаю.
+```
+SQL statistics:
+    queries performed:
+        read:                            0
+        write:                           3730
+        other:                           20
+        total:                           3750
+    transactions:                        1      (0.01 per sec.)
+    queries:                             3750   (19.94 per sec.)
+    ignored errors:                      0      (0.00 per sec.)
+    reconnects:                          0      (0.00 per sec.)
+
+General statistics:
+    total time:                          188.0275s
+    total number of events:              1
+
+Latency (ms):
+         min:                               188026.77
+         avg:                               188026.77
+         max:                               188026.77
+         95th percentile:                   100000.00
+         sum:                               188026.77
+
+Threads fairness:
+    events (avg/stddev):           1.0000/0.00
+    execution time (avg/stddev):   188.0268/0.00
+
+```
+
+>генерирую 1 000 000 строк в таблице для 10 таблиц (от sbtest1 до sbtest10) внутри базы данных dbtest. по умолчанию имя схемы - "public".
+
+```
+damir@postgres-node-3:~$ psql -U devops -d dbtest -h 127.0.0.1 -p 5432 -W -c '\dt+\'
+Password: 
+                                    List of relations
+ Schema |   Name   | Type  | Owner  | Persistence | Access method |  Size  | Description 
+--------+----------+-------+--------+-------------+---------------+--------+-------------
+ public | sbtest1  | table | devops | permanent   | heap          | 211 MB | 
+ public | sbtest10 | table | devops | permanent   | heap          | 211 MB | 
+ public | sbtest2  | table | devops | permanent   | heap          | 211 MB | 
+ public | sbtest3  | table | devops | permanent   | heap          | 211 MB | 
+ public | sbtest4  | table | devops | permanent   | heap          | 211 MB | 
+ public | sbtest5  | table | devops | permanent   | heap          | 211 MB | 
+ public | sbtest6  | table | devops | permanent   | heap          | 211 MB | 
+ public | sbtest7  | table | devops | permanent   | heap          | 211 MB | 
+ public | sbtest8  | table | devops | permanent   | heap          | 211 MB | 
+ public | sbtest9  | table | devops | permanent   | heap          | 211 MB | 
+(10 rows)
+```
+и по наблюдаю что происходит в моих графиках.
+
 ![image](https://user-images.githubusercontent.com/85208391/206629385-ad0d6248-e0d8-482c-84e5-22e729b303b9.png)
 ![image](https://user-images.githubusercontent.com/85208391/206629775-470d862f-9f74-4a32-a517-de00823e9b8a.png)
 
+* __протестирую нагрузку read/write__
 
+sudo sysbench \
+--db-driver=pgsql \
+--report-interval=10 \
+--oltp-table-size=1000000 \
+--oltp-tables-count=10 \
+--threads=64 \
+--time=600 \
+--pgsql-host=34.118.62.168 \
+--pgsql-port=5432 \
+--pgsql-user=devops \
+--pgsql-password=513DFrtwW \
+--pgsql-db=dbtest \
+/usr/share/sysbench/tests/include/oltp_legacy/WR.lua \
+run
 
 
 
