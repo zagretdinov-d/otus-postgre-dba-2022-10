@@ -139,6 +139,8 @@ Password:
 
 ![image](https://user-images.githubusercontent.com/85208391/206629385-ad0d6248-e0d8-482c-84e5-22e729b303b9.png)
 ![image](https://user-images.githubusercontent.com/85208391/206629775-470d862f-9f74-4a32-a517-de00823e9b8a.png)
+![image](https://user-images.githubusercontent.com/85208391/206656101-1568e3b0-c565-4538-8b99-68e4361cce94.png)
+
 
 * __протестирую нагрузку read/write__
 
