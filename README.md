@@ -179,6 +179,8 @@ run
 
 ![image](https://user-images.githubusercontent.com/85208391/206670770-977bf918-43a9-4607-811d-51105b883999.png)
 
+![image](https://user-images.githubusercontent.com/85208391/206772541-0f2b7645-5cf4-4ce2-8efb-f635915c2b34.png)
+
 при дефолтных tps - 292, 
 
 * __настраиваю параметры для достижения максимальной производительности__
