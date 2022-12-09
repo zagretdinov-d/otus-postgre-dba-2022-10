@@ -175,6 +175,8 @@ run
 
 ![image](https://user-images.githubusercontent.com/85208391/206653023-7f42ec59-e268-4182-bd01-e38526ce1f86.png)
 
+![image](https://user-images.githubusercontent.com/85208391/206670770-977bf918-43a9-4607-811d-51105b883999.png)
+
 
 * __Вывод__
 ![image](https://user-images.githubusercontent.com/85208391/206658720-9d8d5742-56bb-42f4-aecb-b25ee9e67ac1.png)
