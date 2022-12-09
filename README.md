@@ -139,8 +139,6 @@ Password:
 
 ![image](https://user-images.githubusercontent.com/85208391/206629385-ad0d6248-e0d8-482c-84e5-22e729b303b9.png)
 ![image](https://user-images.githubusercontent.com/85208391/206629775-470d862f-9f74-4a32-a517-de00823e9b8a.png)
-![image](https://user-images.githubusercontent.com/85208391/206656101-1568e3b0-c565-4538-8b99-68e4361cce94.png)
-
 
 * __протестирую нагрузку read/write__
 
@@ -158,21 +156,12 @@ sudo sysbench \
 --pgsql-db=dbtest \
 /usr/share/sysbench/tests/include/oltp_legacy/WR.lua \
 run
+
 ![image](https://user-images.githubusercontent.com/85208391/206652508-94e3222b-cdb2-49e2-a937-fa30b09157ca.png)
 ![image](https://user-images.githubusercontent.com/85208391/206652822-db016b0a-f400-4dc4-8685-1d39d16b8962.png)
 
 ![image](https://user-images.githubusercontent.com/85208391/206653023-7f42ec59-e268-4182-bd01-e38526ce1f86.png)
 
-
-
-
-
-
-
-
-Решение
-![image](https://user-images.githubusercontent.com/85208391/206657441-60478ad9-2d6e-4359-a7c6-18d42172ce66.png)
-![image](https://user-images.githubusercontent.com/85208391/206657762-a093fb60-6585-434d-be79-32e1f1579376.png)
 
 
 
