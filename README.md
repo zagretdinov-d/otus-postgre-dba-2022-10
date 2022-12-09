@@ -205,8 +205,10 @@ effective_cache_size = 7GB
 
 нагрузка cpu
 ![image](https://user-images.githubusercontent.com/85208391/206778639-9a3a98c8-5bc5-4483-81a9-5699d8dcdbe8.png)
+нагрузка на опертавную память
+![image](https://user-images.githubusercontent.com/85208391/206780789-dcdd9289-33ba-4ec5-beec-e0eba9113202.png)
 
-
+![image](https://user-images.githubusercontent.com/85208391/206781187-e832486a-17bd-45a9-908f-b2b6f2cfe6d1.png)
 
 
 ![image](https://user-images.githubusercontent.com/85208391/206658862-276907e1-0990-420e-8801-315cef9a1078.png)
