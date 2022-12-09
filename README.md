@@ -211,6 +211,7 @@ effective_cache_size = 7GB
 ![image](https://user-images.githubusercontent.com/85208391/206780789-dcdd9289-33ba-4ec5-beec-e0eba9113202.png)
 
 > фиксирую процесс с помощью команды top
+
 ![image](https://user-images.githubusercontent.com/85208391/206790920-8b9a5034-118c-4a38-b2dc-1024d6583e24.png)
 
 
