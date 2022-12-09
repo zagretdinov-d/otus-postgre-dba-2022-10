@@ -156,6 +156,12 @@ sudo sysbench \
 --pgsql-db=dbtest \
 /usr/share/sysbench/tests/include/oltp_legacy/WR.lua \
 run
+![image](https://user-images.githubusercontent.com/85208391/206652508-94e3222b-cdb2-49e2-a937-fa30b09157ca.png)
+![image](https://user-images.githubusercontent.com/85208391/206652822-db016b0a-f400-4dc4-8685-1d39d16b8962.png)
+
+![image](https://user-images.githubusercontent.com/85208391/206653023-7f42ec59-e268-4182-bd01-e38526ce1f86.png)
+
+
 
 
 
