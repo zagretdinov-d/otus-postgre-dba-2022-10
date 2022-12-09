@@ -203,10 +203,14 @@ effective_cache_size = 7GB
 
 ![image](https://user-images.githubusercontent.com/85208391/206658720-9d8d5742-56bb-42f4-aecb-b25ee9e67ac1.png)
 
-нагрузка cpu
+> проверяю как изменилась нагрузка на CPU в проыентном в соотношении
 ![image](https://user-images.githubusercontent.com/85208391/206778639-9a3a98c8-5bc5-4483-81a9-5699d8dcdbe8.png)
-нагрузка на опертавную память
+
+> проверяю нагрузку на опертавную память
+
 ![image](https://user-images.githubusercontent.com/85208391/206780789-dcdd9289-33ba-4ec5-beec-e0eba9113202.png)
+
+> теперь саму транзакцию, я избавился от задержек связанных с обращением к диску и теперь tps стабилен, что наблюдаю на графиках
 
 ![image](https://user-images.githubusercontent.com/85208391/206781187-e832486a-17bd-45a9-908f-b2b6f2cfe6d1.png)
 
