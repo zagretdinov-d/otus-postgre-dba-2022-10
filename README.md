@@ -58,6 +58,8 @@ GRANT
 ```
 Прежде чем приступить к нагрузочному тестированию и установки sysbench. Я в этот раз чтоб промониторить кластер  пробую подключить уже ранне равернутому prometheus c графаной.
 
+![image](https://user-images.githubusercontent.com/85208391/206626225-dc680195-3829-4f10-a12b-92f3df412a55.png)
+![image](https://user-images.githubusercontent.com/85208391/206626782-465ffe6e-2a3a-406d-8715-859c2b28f4ca.png)
 
 
 
