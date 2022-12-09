@@ -56,14 +56,35 @@ CREATE DATABASE
 postgres=# GRANT ALL PRIVILEGES ON DATABASE dbtest TO devops;
 GRANT
 ```
-Прежде чем приступить к нагрузочному тестированию и установки sysbench. Я в этот раз чтоб промониторить кластер  пробую подключить уже ранне равернутому prometheus c графаной.
+>Прежде чем приступить к нагрузочному тестированию и установки sysbench. Я в этот раз чтоб мониторить кластер  пробую подключить уже ранне равернутому prometheus c графаной.
 
 ![image](https://user-images.githubusercontent.com/85208391/206626225-dc680195-3829-4f10-a12b-92f3df412a55.png)
 ![image](https://user-images.githubusercontent.com/85208391/206626782-465ffe6e-2a3a-406d-8715-859c2b28f4ca.png)
 
+>Удалось подключиться с помощью утилитки экспартера для postgres где я в конфигах прописал созданную базу и пользователя. В графане все работает и база успешно подцепилась.
 
 
 
+* __приступаю к устанавливке sysbench для тестирования__
+```
+curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.deb.sh | sudo bash
+sudo apt -y install sysbench
+```
+* __инициализирую созданную БД в sysbench__
+```
+sudo sysbench \
+--db-driver=pgsql \
+--oltp-table-size=1000000 \
+--oltp-tables-count=10 \
+--threads=1 \
+--pgsql-host=34.118.62.XXX \
+--pgsql-port=5432 \
+--pgsql-user=devops \
+--pgsql-password=513DFXXX \
+--pgsql-db=dbtest \
+/usr/share/sysbench/tests/include/oltp_legacy/parallel_prepare.lua \
+run
+```
 
 * __Настраиваю логирования так, чтобы в журнал сообщений сбрасывалась информация о блокировках, удерживаемых более 200 миллисекунд__
   * Включаю логирование
