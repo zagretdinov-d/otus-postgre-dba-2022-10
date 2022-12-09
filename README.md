@@ -19,14 +19,50 @@ damir@Damir:~$ gcloud beta compute instances create postgres-node-3 \
 --tags=postgres \
 --restart-on-failure
 ```
+
+* __В результате создается машина__
+```
+NAME             ZONE               MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP    STATUS
+postgres-node-3  europe-central2-c  e2-medium                  10.186.0.7   34.118.62.xxx  RUNNING
+```
+
 * __подключаемся к VM и устанавливаем Postgres 14 с дефолтными настройками__
 ```
-damir@postgres-node-2:~$ sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y -q && sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - && sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt -y install postgresql-14
+damir@postgres-node-3:~$ sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y -q && sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - && sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt -y install postgresql-14
 ```
-* __запускаем psql__
+* __редактирую /etc/postgresql/14/main/pg_hba.conf и sudo nano /etc/postgresql/14/main/postgresql.conf__
+```
+host    dbtest          devops          34.118.62.xxx/32            md5
+listen_addresses = '*'
+```
+* __перезапускаюсь__
+```
+sudo pg_ctlcluster 14 main restart
+```
+* __запускаю psql__
 ```
 sudo -u postgres psql
 ```
+* __подготавливаю базу__
+```
+damir@postgres-node-3:/opt/postgres_exporter$ sudo -u postgres psql
+psql (14.6 (Ubuntu 14.6-1.pgdg20.04+1))
+Type "help" for help.
+
+postgres=# CREATE USER devops WITH PASSWORD 'password';
+CREATE ROLE
+postgres=# CREATE DATABASE dbtest;
+CREATE DATABASE
+postgres=# GRANT ALL PRIVILEGES ON DATABASE dbtest TO devops;
+GRANT
+```
+Прежде чем приступить к нагрузочному тестированию и установки sysbench. Я в этот раз чтоб промониторить кластер  пробую подключить уже ранне равернутому prometheus c графаной.
+
+
+
+
+
+
 * __Настраиваю логирования так, чтобы в журнал сообщений сбрасывалась информация о блокировках, удерживаемых более 200 миллисекунд__
   * Включаю логирование
   ```
