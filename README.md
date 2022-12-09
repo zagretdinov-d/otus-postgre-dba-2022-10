@@ -149,10 +149,10 @@ sudo sysbench \
 --oltp-tables-count=10 \
 --threads=64 \
 --time=600 \
---pgsql-host=34.118.62.168 \
+--pgsql-host=34.118.62.XXX \
 --pgsql-port=5432 \
 --pgsql-user=devops \
---pgsql-password=513DFrtwW \
+--pgsql-password=513DFrXXX \
 --pgsql-db=dbtest \
 /usr/share/sysbench/tests/include/oltp_legacy/WR.lua \
 run
