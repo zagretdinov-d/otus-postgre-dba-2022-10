@@ -172,6 +172,7 @@ run
 
 Решение
 ![image](https://user-images.githubusercontent.com/85208391/206657441-60478ad9-2d6e-4359-a7c6-18d42172ce66.png)
+![image](https://user-images.githubusercontent.com/85208391/206657762-a093fb60-6585-434d-be79-32e1f1579376.png)
 
 
 
