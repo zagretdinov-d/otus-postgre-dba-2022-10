@@ -183,7 +183,26 @@ run
 
 * __настраиваю параметры для достижения максимальной производительности__
 
+> изменяю следующие параметы в nano /etc/postgresql/14/main/postgresql.conf
+
+```
+checkpoint_timeout = 1h
+max_wal_size = 2GB
+maintenance_work_mem = 100MB
+work_mem = 50MB
+max_connections = 80
+shared_buffers = 4892MB
+synchronous_commit = off
+fsync = off
+full_page_writes = off
+effective_cache_size = 7GB
+```
+> перезагружаю postgres проверяю отображения в графане.
+
 ![image](https://user-images.githubusercontent.com/85208391/206658720-9d8d5742-56bb-42f4-aecb-b25ee9e67ac1.png)
+
+
+
 
 ![image](https://user-images.githubusercontent.com/85208391/206658862-276907e1-0990-420e-8801-315cef9a1078.png)
 ![image](https://user-images.githubusercontent.com/85208391/206658959-34335431-a4b1-4cf3-abfb-796bce9cbc6c.png)
