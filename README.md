@@ -210,10 +210,12 @@ effective_cache_size = 7GB
 
 ![image](https://user-images.githubusercontent.com/85208391/206780789-dcdd9289-33ba-4ec5-beec-e0eba9113202.png)
 
+![image](https://user-images.githubusercontent.com/85208391/206790920-8b9a5034-118c-4a38-b2dc-1024d6583e24.png)
+
+
 > теперь саму транзакцию, я избавился от задержек связанных с обращением к диску и теперь tps стабилен, что наблюдаю на графиках
 
 ![image](https://user-images.githubusercontent.com/85208391/206781187-e832486a-17bd-45a9-908f-b2b6f2cfe6d1.png)
 
 
-![image](https://user-images.githubusercontent.com/85208391/206663478-1f411562-9c2f-4a5a-bc62-062c8581c6e8.png)
 
