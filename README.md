@@ -211,7 +211,5 @@ effective_cache_size = 7GB
 ![image](https://user-images.githubusercontent.com/85208391/206781187-e832486a-17bd-45a9-908f-b2b6f2cfe6d1.png)
 
 
-![image](https://user-images.githubusercontent.com/85208391/206658862-276907e1-0990-420e-8801-315cef9a1078.png)
-![image](https://user-images.githubusercontent.com/85208391/206658959-34335431-a4b1-4cf3-abfb-796bce9cbc6c.png)
 ![image](https://user-images.githubusercontent.com/85208391/206663478-1f411562-9c2f-4a5a-bc62-062c8581c6e8.png)
 
