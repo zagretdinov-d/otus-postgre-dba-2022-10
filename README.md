@@ -85,6 +85,12 @@ sudo sysbench \
 /usr/share/sysbench/tests/include/oltp_legacy/parallel_prepare.lua \
 run
 ```
+![image](https://user-images.githubusercontent.com/85208391/206629385-ad0d6248-e0d8-482c-84e5-22e729b303b9.png)
+![image](https://user-images.githubusercontent.com/85208391/206629775-470d862f-9f74-4a32-a517-de00823e9b8a.png)
+
+
+
+
 
 * __Настраиваю логирования так, чтобы в журнал сообщений сбрасывалась информация о блокировках, удерживаемых более 200 миллисекунд__
   * Включаю логирование
