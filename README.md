@@ -175,10 +175,14 @@ run
 
 ![image](https://user-images.githubusercontent.com/85208391/206653023-7f42ec59-e268-4182-bd01-e38526ce1f86.png)
 
+> фиксирую и просматриваю транзакцию которую удалось достичь 
+
 ![image](https://user-images.githubusercontent.com/85208391/206670770-977bf918-43a9-4607-811d-51105b883999.png)
 
+при дефолтных tps - 292, 
 
-* __Вывод__
+* __настраиваю параметры для достижения максимальной производительности__
+
 ![image](https://user-images.githubusercontent.com/85208391/206658720-9d8d5742-56bb-42f4-aecb-b25ee9e67ac1.png)
 
 ![image](https://user-images.githubusercontent.com/85208391/206658862-276907e1-0990-420e-8801-315cef9a1078.png)
