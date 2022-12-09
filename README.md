@@ -56,13 +56,12 @@ CREATE DATABASE
 postgres=# GRANT ALL PRIVILEGES ON DATABASE dbtest TO devops;
 GRANT
 ```
->Прежде чем приступить к нагрузочному тестированию и установки sysbench. Я в этот раз чтоб мониторить кластер  пробую подключить уже ранне равернутому prometheus c графаной.
+>Прежде чем приступить к нагрузочному тестированию и установки sysbench. Чтоб мониторить и демонстрировать производительность кластера раверну prometheus c графаной.
 
 ![image](https://user-images.githubusercontent.com/85208391/206626225-dc680195-3829-4f10-a12b-92f3df412a55.png)
 ![image](https://user-images.githubusercontent.com/85208391/206626782-465ffe6e-2a3a-406d-8715-859c2b28f4ca.png)
 
->Удалось подключиться с помощью утилитки экспартера для postgres где я в конфигах прописал созданную базу и пользователя. В графане все работает и база успешно подцепилась.
-
+>Удалось подключиться с помощью утилитки экспартера для postgres где я в конфигах прописал созданную базу и пользователя. В графане все работает и база успешно подцепилась. Как видно на изображении настройки по дефолту.
 
 
 * __приступаю к устанавливке sysbench для тестирования__
@@ -115,8 +114,10 @@ Threads fairness:
 
 ```
 
->генерирую 1 000 000 строк в таблице для 10 таблиц (от sbtest1 до sbtest10) внутри базы данных dbtest. по умолчанию имя схемы - "public".
+>генерирую 1 000 000 строк в таблице для 10 таблиц (от sbtest1 до sbtest10) внутри базы данных dbtest. по умолчанию имя схемы - "public". Данные parallel_prepare.lua доступны в /usr/share/sysbench/tests/include/oltp_legacy.
 
+
+* __Проверяю созданные таблицы__
 ```
 damir@postgres-node-3:~$ psql -U devops -d dbtest -h 127.0.0.1 -p 5432 -W -c '\dt+\'
 Password: 
@@ -135,13 +136,18 @@ Password:
  public | sbtest9  | table | devops | permanent   | heap          | 211 MB | 
 (10 rows)
 ```
-и по наблюдаю что происходит в моих графиках.
+> ну и проверю что там произошло в моих графиках postgresql.
 
 ![image](https://user-images.githubusercontent.com/85208391/206629385-ad0d6248-e0d8-482c-84e5-22e729b303b9.png)
 ![image](https://user-images.githubusercontent.com/85208391/206629775-470d862f-9f74-4a32-a517-de00823e9b8a.png)
 
-* __протестирую нагрузку read/write__
+> вижу транзакции демонстративно проходят успешно и отображаются на графиках.  
 
+* __протестирую нагрузку read/write__ 
+
+> Перед тестом добавлю пару графиков которыми буду демонстрировать нагрузку на опреативную память и CPU на физической машине.
+
+```
 sudo sysbench \
 --db-driver=pgsql \
 --report-interval=10 \
@@ -156,9 +162,16 @@ sudo sysbench \
 --pgsql-db=dbtest \
 /usr/share/sysbench/tests/include/oltp_legacy/WR.lua \
 run
+```
+> с помощью команды top я проверю в терминале и зафиксирую результаты проведения нагрузки
 
 ![image](https://user-images.githubusercontent.com/85208391/206652508-94e3222b-cdb2-49e2-a937-fa30b09157ca.png)
+
+> теперь зафиксирую на графиках
+
 ![image](https://user-images.githubusercontent.com/85208391/206652822-db016b0a-f400-4dc4-8685-1d39d16b8962.png)
+
+> и конечная стистика sql по оканчанию нагрузки
 
 ![image](https://user-images.githubusercontent.com/85208391/206653023-7f42ec59-e268-4182-bd01-e38526ce1f86.png)
 
