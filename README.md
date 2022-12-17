@@ -16,7 +16,7 @@ damir@Damir:~$ gcloud beta compute instances create postgres-node-3 \
 --machine-type=e2-medium \
 --image-family ubuntu-2004-lts \
 --image-project=ubuntu-os-cloud \
---boot-disk-size=10GB \
+--boot-disk-size=10GB \   
 --boot-disk-type=pd-ssd \
 --tags=postgres \
 --restart-on-failure
