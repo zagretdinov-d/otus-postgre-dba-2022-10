@@ -3,16 +3,25 @@
 
 * __Цель:__
 
-  * реализовать свой миникластер на 3 ВМ
+  * Реализовать свой миникластер на 3 ВМ
   * Задание со звездочкой*
        - реализовать горячее реплицирование для высокой доступности на 4ВМ.
        - Источником должна выступать ВМ №3. Написать с какими проблемами столкнулись.
 
 
 ### Решение:
-* __создаю GCE инстанс типа e2-medium__
+> Для выполнения вышепоставленных целей подготавливаю 4 VM инстанции со следующими характеристиками.
+
+* pg_node1 (Ubuntu 20.04, PostgreSQL 14)
+* pg_node2 (Ubuntu 20.04, PostgreSQL 14)
+* pg_node3 (Ubuntu 20.04, PostgreSQL 14)
+* slave_node4 (Ubuntu 20.04, PostgreSQL 14)
+
+
+
+ __создаю GCE инстанс типа e2-medium__
 ```
-damir@Damir:~$ gcloud beta compute instances create postgres-node-3 \
+damir@Damir:~$ gcloud beta compute instances create pg_node-1 \
 --machine-type=e2-medium \
 --image-family ubuntu-2004-lts \
 --image-project=ubuntu-os-cloud \
