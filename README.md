@@ -12,14 +12,29 @@
 ### Решение:
 > Для выполнения вышепоставленных целей подготавливаю 4 VM инстанции со следующими характеристиками.
 
-* pg_node1 (Ubuntu 20.04, PostgreSQL 14)
-* pg_node2 (Ubuntu 20.04, PostgreSQL 14)
-* pg_node3 (Ubuntu 20.04, PostgreSQL 14)
-* slave_node4 (Ubuntu 20.04, PostgreSQL 14)
+* pg-node1 (Ubuntu 20.04, PostgreSQL 14)
+* pg-node2 (Ubuntu 20.04, PostgreSQL 14)
+* pg-node3 (Ubuntu 20.04, PostgreSQL 14)
+* slave-node4 (Ubuntu 20.04, PostgreSQL 14)
+
+> Для развертывания инстанций google облаке применю такой инструмент terrafom. Если в крации в созданном файле main.tf добавленны параметры для создания 4-х машин и запск скрипта pg_install с установкой postgresql-14.
+
+- __Настройка логической репликации. Создаю БД и таблицу в nodedb1 и nodedb2:__
+  - ___pg-node1___
+  ``` amir@pg-node1:~$ sudo -u postgres psql
+  psql (14.6 (Ubuntu 14.6-1.pgdg20.04+1))
+  Type "help" for help.
+
+  postgres=# alter system set wal_level = logical;
+  ALTER SYSTEM
+  postgres=#
+  damir@pg-node1:~$ sudo pg_ctlcluster 14 main restart
+  
+
+```
 
 
-
- __создаю GCE инстанс типа e2-medium__
+__создаю GCE инстанс типа e2-medium__
 ```
 damir@Damir:~$ gcloud beta compute instances create pg_node-1 \
 --machine-type=e2-medium \
