@@ -463,5 +463,45 @@ damir@pg-node3:~$
 ```
 > как видно все сбэкапилось все нормально работает. В дополнении чтоб не выполнять это все в ручную просто можно создать скрипт который будет бэкапить данные, а старые данные старше к примеру 7 дней удалять и с помощью cron выполнять ежедневно в определенное время.
 
-> теперь проблема сдесь заключается в то что невозможно настроить обычную master-slave репликацию. Нужно менять параметры на на pg-node3. в результате репликация ломается вся. Перестаёт работать pg-node3. И в этом случае настрою 4 ую ноду.
+> теперь проблема сдесь заключается в том что невозможно настроить обычную master-slave репликацию. Нужно менять параметры на на pg-node3. в результате репликация ломается. Перестаёт работать pg-node3. И в этом случае настрою 4 ую ноду.
+
+> Для начала я настрою параметры главного сервера это будет нода pg-node3
+```
+listen_addresses = '*'
+wal_level = 'logical'
+max_replication_slots = 60
+max_wal_senders = 80
+```
+* Настраиваю резервный сервер:
+
+_Останавливаю postgresql и добавляю следующие параметры._
+```
+sudo pg_ctlcluster 14 main start
+
+sudo vi /etc/postgresql/14/main/pg_hba.conf
+host replication postgres 10.128.0.33/32 trust
+
+sudo vi /etc/postgresql/14/main/postgresql.conf
+listen_addresses = '*'
+```
+_Удаляю содержимое в папке._
+```
+sudo rm -rf /var/lib/postgresql/14/main
+```
+_Делаю бэкап  БД. Ключ -R создаст заготовку управляющего файла recovery.conf._
+```
+sudo -u postgres pg_basebackup -X stream -v -h 10.128.0.33 -p 5432 -R -D /var/lib/postgresql/14/main
+
+```
+_Получаю следующие конфигурации_ 
+```
+wal_level = 'replica'
+primary_conninfo = 'user=postgres passfile=''/var/lib/postgresql/.pgpass'' channel_binding=prefer host=10.128.0.33 port=5432 sslmode=prefer sslcompression=0 sslsni=1 ssl_min_protocol_version=TLSv1.2 gssencmode=prefer krbsrvname=postgres target_session_attrs=any'
+```
+_Стартую кластер_
+```
+sudo pg_ctlcluster 12 main2 start
+```
+* __Проверяю результ настроек__
+
 
