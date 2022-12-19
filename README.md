@@ -194,236 +194,274 @@ db_node2-# a.id = b.id;
 ![изображение](https://user-images.githubusercontent.com/85208391/208361270-196d4430-42ab-44cc-9051-b37ecb2775e5.png)
 
 
-
-
-
-
-
-
-
-
-
-__создаю GCE инстанс типа e2-medium__
+> на первой ноде pg-node1 добавлю пару строк и выполню запрос.
 ```
-damir@Damir:~$ gcloud beta compute instances create pg_node-1 \
---machine-type=e2-medium \
---image-family ubuntu-2004-lts \
---image-project=ubuntu-os-cloud \
---boot-disk-size=10GB \   
---boot-disk-type=pd-ssd \
---tags=postgres \
---restart-on-failure
-```
+db_node1=# insert into test1 values (generate_series(2,10),md5(random()::text));
+INSERT 0 9
 
-* __В результате создается машина__
-```
-NAME             ZONE               MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP    STATUS
-postgres-node-3  europe-central2-c  e2-medium                  10.186.0.7   34.118.62.xxx  RUNNING
-```
-
-* __подключаемся к VM и устанавливаем Postgres 14 с дефолтными настройками__
-```
-damir@postgres-node-3:~$ sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y -q && sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - && sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt -y install postgresql-14
-```
-* __редактирую /etc/postgresql/14/main/pg_hba.conf и sudo nano /etc/postgresql/14/main/postgresql.conf__
-```
-host    dbtest          devops          0.0.0.0/32            md5
-listen_addresses = '*'
-```
-* __перезапускаюсь__
-```
-sudo pg_ctlcluster 14 main restart
-```
-* __запускаю psql__
-```
-sudo -u postgres psql
-```
-* __подготавливаю базу__
-```
-damir@postgres-node-3:/opt/postgres_exporter$ sudo -u postgres psql
-psql (14.6 (Ubuntu 14.6-1.pgdg20.04+1))
-Type "help" for help.
-
-postgres=# CREATE USER devops WITH PASSWORD 'password';
-CREATE ROLE
-postgres=# CREATE DATABASE dbtest;
-CREATE DATABASE
-postgres=# GRANT ALL PRIVILEGES ON DATABASE dbtest TO devops;
-GRANT
-```
->Прежде чем приступить к нагрузочному тестированию и установки sysbench. Чтоб мониторить и демонстрировать производительность кластера раверну prometheus c графаной.
-
-![image](https://user-images.githubusercontent.com/85208391/206626225-dc680195-3829-4f10-a12b-92f3df412a55.png)
-![image](https://user-images.githubusercontent.com/85208391/206626782-465ffe6e-2a3a-406d-8715-859c2b28f4ca.png)
-
->Удалось подключиться с помощью утилитки экспартера для postgres где я в конфигах прописал созданную базу и пользователя. В графане все работает и база успешно подцепилась. Как видно на изображении настройки по дефолту.
-
-
-* __приступаю к устанавливке sysbench для тестирования__
-```
-curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.deb.sh | sudo bash
-sudo apt -y install sysbench
-```
-* __инициализирую созданную БД в sysbench__
-```
-sudo sysbench \
---db-driver=pgsql \
---oltp-table-size=1000000 \
---oltp-tables-count=10 \
---threads=1 \
---pgsql-host=34.118.62.XXX \
---pgsql-port=5432 \
---pgsql-user=devops \
---pgsql-password=513DFXXX \
---pgsql-db=dbtest \
-/usr/share/sysbench/tests/include/oltp_legacy/parallel_prepare.lua \
-run
-```
-В результате получаю.
-```
-SQL statistics:
-    queries performed:
-        read:                            0
-        write:                           3730
-        other:                           20
-        total:                           3750
-    transactions:                        1      (0.01 per sec.)
-    queries:                             3750   (19.94 per sec.)
-    ignored errors:                      0      (0.00 per sec.)
-    reconnects:                          0      (0.00 per sec.)
-
-General statistics:
-    total time:                          188.0275s
-    total number of events:              1
-
-Latency (ms):
-         min:                               188026.77
-         avg:                               188026.77
-         max:                               188026.77
-         95th percentile:                   100000.00
-         sum:                               188026.77
-
-Threads fairness:
-    events (avg/stddev):           1.0000/0.00
-    execution time (avg/stddev):   188.0268/0.00
-
-```
-
->генерирую 1 000 000 строк в таблице для 10 таблиц (от sbtest1 до sbtest10) внутри базы данных dbtest. по умолчанию имя схемы - "public". Данные parallel_prepare.lua доступны в /usr/share/sysbench/tests/include/oltp_legacy.
-
-
-* __Проверяю созданные таблицы__
-```
-damir@postgres-node-3:~$ psql -U devops -d dbtest -h 127.0.0.1 -p 5432 -W -c '\dt+\'
-Password: 
-                                    List of relations
- Schema |   Name   | Type  | Owner  | Persistence | Access method |  Size  | Description 
---------+----------+-------+--------+-------------+---------------+--------+-------------
- public | sbtest1  | table | devops | permanent   | heap          | 211 MB | 
- public | sbtest10 | table | devops | permanent   | heap          | 211 MB | 
- public | sbtest2  | table | devops | permanent   | heap          | 211 MB | 
- public | sbtest3  | table | devops | permanent   | heap          | 211 MB | 
- public | sbtest4  | table | devops | permanent   | heap          | 211 MB | 
- public | sbtest5  | table | devops | permanent   | heap          | 211 MB | 
- public | sbtest6  | table | devops | permanent   | heap          | 211 MB | 
- public | sbtest7  | table | devops | permanent   | heap          | 211 MB | 
- public | sbtest8  | table | devops | permanent   | heap          | 211 MB | 
- public | sbtest9  | table | devops | permanent   | heap          | 211 MB | 
+db_node2=# select * from test1;
+ id |               mesg               
+----+----------------------------------
+  1 | Строка в таблице test1 - 1
+  2 | 23eaa4f38c601d3577765a5fb2f518c4
+  3 | c6cdacad1b1b0c53f3c955ea4a050c97
+  4 | 01a24a155e8a1092b84b719c0dbbd3c4
+  5 | 10c8f45436a09940700ed3efc326d109
+  6 | c10a4ee0d2d9c91d7068eb1d5a313414
+  7 | 7391508cde849137c03f2fe42323068d
+  8 | b1885de55e33b94e72c663ec3ed2d34a
+  9 | db4daaab580f6e0c2dbbead914c5d78e
+ 10 | bdd2d42991ca8bd7bada6177b4a7fcf0
 (10 rows)
 ```
-> ну и проверю что там произошло в моих графиках postgresql.
+на второй ноде pg-node2 добавлю пару строк и выполню запрос.
+```
+db_node2=# insert into test2 values (generate_series(2,10),md5(random()::text));
+INSERT 0 9
 
-![image](https://user-images.githubusercontent.com/85208391/206629385-ad0d6248-e0d8-482c-84e5-22e729b303b9.png)
-![image](https://user-images.githubusercontent.com/85208391/206629775-470d862f-9f74-4a32-a517-de00823e9b8a.png)
+db_node1=# select * from test2;
+ id |               mesg               
+----+----------------------------------
+  1 | Строка в таблице test2 - 1
+  2 | 4136f38c64ddb3fbbd5a2bd675a5983a
+  3 | 84202ee7d867cecbe011663be7e79f4b
+  4 | b73b12a5c34e6eceae7f353f56d92636
+  5 | a02bf9c95ac8a03acfc3845676d619c5
+  6 | ba511bb780d03bf58ee157cf787eb1e3
+  7 | a869649b87235b5ee20180091a712313
+  8 | 73afb9e1b4ad6af28874433ad335ce05
+  9 | b5f3256279c1d8e415c44210d07e514d
+ 10 | b07fb90d4fb814ada388d611b1635a2f
+(10 rows)
+```
+> создаю индексы для первой и второй ноде.
+```
+db_node1=# create unique index on test1 (id);
+CREATE INDEX
 
-> вижу транзакции демонстративно проходят успешно и отображаются на графиках.  
+db_node2=# create unique index on test2 (id);
+CREATE INDEX
+```
+> В результате как видно что логическая репликация между node1 и node2 работает.
 
-* __протестирую нагрузку read/write__ 
+- __перехожу к третьему узлу - pg-node3__
 
-> Перед тестом добавлю пару графиков которыми буду демонстрировать нагрузку на опреативную память и CPU на физической машине.
+> Прежде чем начать выполнения логической репликации необходимо создать те самые таблицы test1, test2. 
+```
+postgres=# create database db-node3;
+postgres=# \c db_node3;
+You are now connected to database "db_node3" as user "postgres".
+db_node3=# create table test1(id integer, mesg varchar(50));
+CREATE TABLE
+db_node3=# create table test2(id integer, mesg varchar(50));
+CREATE TABLE
+```
+> Подписываю и проверяю.
 
 ```
-sudo sysbench \
---db-driver=pgsql \
---report-interval=10 \
---oltp-table-size=1000000 \
---oltp-tables-count=10 \
---threads=64 \
---time=600 \
---pgsql-host=34.118.62.XXX \
---pgsql-port=5432 \
---pgsql-user=devops \
---pgsql-password=513DFrXXX \
---pgsql-db=dbtest \
-/usr/share/sysbench/tests/include/oltp_legacy/WR.lua \
-run
+db_node3=# CREATE SUBSCRIPTION test1_3_sub CONNECTION 'host=10.128.0.35 port=5432 user=postgres password=devops123 dbname=db_node1' PUBLICATION test1_pub WITH (copy_data = false);
+NOTICE:  created replication slot "test1_3_sub" on publisher
+CREATE SUBSCRIPTION
+db_node3=# CREATE SUBSCRIPTION test2_3_sub CONNECTION 'host=10.128.0.34 port=5432 user=postgres password=devops123 dbname=db_node2' PUBLICATION test2_pub WITH (copy_data = false);
+NOTICE:  created replication slot "test2_3_sub" on publisher
+CREATE SUBSCRIPTION
+
+db_node3=# SELECT * FROM pg_stat_subscription \gx
+-[ RECORD 1 ]---------+------------------------------
+subid                 | 16391
+subname               | test1_3_sub
+pid                   | 5075
+relid                 | 
+received_lsn          | 0/17276E0
+last_msg_send_time    | 2022-12-19 07:31:08.752266+00
+last_msg_receipt_time | 2022-12-19 07:31:08.753486+00
+latest_end_lsn        | 0/17276E0
+latest_end_time       | 2022-12-19 07:31:08.752266+00
+-[ RECORD 2 ]---------+------------------------------
+subid                 | 16392
+subname               | test2_3_sub
+pid                   | 5107
+relid                 | 
+received_lsn          | 0/1726838
+last_msg_send_time    | 2022-12-19 07:31:16.266526+00
+last_msg_receipt_time | 2022-12-19 07:31:16.267223+00
+latest_end_lsn        | 0/1726838
+latest_end_time       | 2022-12-19 07:31:16.266526+00
 ```
-> с помощью команды top я проверю в терминале и зафиксирую результаты проведения нагрузки
-
-![image](https://user-images.githubusercontent.com/85208391/206652508-94e3222b-cdb2-49e2-a937-fa30b09157ca.png)
-
-> теперь зафиксирую на графиках
-
-![image](https://user-images.githubusercontent.com/85208391/206652822-db016b0a-f400-4dc4-8685-1d39d16b8962.png)
-
-> и конечная стистика sql по оканчанию нагрузки
-
-![image](https://user-images.githubusercontent.com/85208391/206653023-7f42ec59-e268-4182-bd01-e38526ce1f86.png)
-
-> фиксирую и просматриваю транзакцию которую удалось достичь 
-
-![image](https://user-images.githubusercontent.com/85208391/206670770-977bf918-43a9-4607-811d-51105b883999.png)
-
-![image](https://user-images.githubusercontent.com/85208391/206772541-0f2b7645-5cf4-4ce2-8efb-f635915c2b34.png)
-
-при дефолтных tps - 292, 
-
-* __настраиваю параметры для достижения максимальной производительности__
-
-> изменяю следующие параметы в nano /etc/postgresql/14/main/postgresql.conf
+> Выполняю запрос к таблице.
 
 ```
-checkpoint_timeout = 1h
-max_wal_size = 2GB
-maintenance_work_mem = 100MB
-work_mem = 50MB
-max_connections = 80
-shared_buffers = 4892MB
-synchronous_commit = off
-fsync = off
-full_page_writes = off
-effective_cache_size = 7GB
+db_node3=# select * from test1;
+ id | mesg 
+----+------
+(0 rows)
 ```
-> перезагружаю postgres проверяю отображения в графане.
+> ой а данных то нет что то пошло не так), а дело в том что 
+copy_data (boolean)
+Определяет, должны ли копироваться существующие данные в публикациях, на которые оформляется подписка, сразу после начала репликации. Значение по умолчанию — true. а я поставил false. 
+Пересоздам подписки с условием получения всех данных:
 
-![image](https://user-images.githubusercontent.com/85208391/206658720-9d8d5742-56bb-42f4-aecb-b25ee9e67ac1.png)
+```
+db_node3=# drop subscription test1_3_sub;
+NOTICE:  dropped replication slot "test1_3_sub" on publisher
+DROP SUBSCRIPTION
+db_node3=# drop subscription test2_3_sub;
+NOTICE:  dropped replication slot "test2_3_sub" on publisher
+DROP SUBSCRIPTION
+db_node3=# CREATE SUBSCRIPTION test2_3_sub CONNECTION 'host=10.128.0.34 port=5432 user=postgres password=devops123 dbname=db_node2' PUBLICATION test2_pub WITH (copy_data = true);
+NOTICE:  created replication slot "test2_3_sub" on publisher
+CREATE SUBSCRIPTION
+db_node3=# CREATE SUBSCRIPTION test1_3_sub CONNECTION 'host=10.128.0.35 port=5432 user=postgres password=devops123 dbname=db_node1' PUBLICATION test1_pub WITH (copy_data = true);
+NOTICE:  created replication slot "test1_3_sub" on publisher
+CREATE SUBSCRIPTION
+db_node3=# SELECT * FROM pg_stat_subscription \gx
+-[ RECORD 1 ]---------+------------------------------
+subid                 | 16393
+subname               | test2_3_sub
+pid                   | 5260
+relid                 | 
+received_lsn          | 0/17268A8
+last_msg_send_time    | 2022-12-19 07:36:35.942556+00
+last_msg_receipt_time | 2022-12-19 07:36:35.942925+00
+latest_end_lsn        | 0/17268A8
+latest_end_time       | 2022-12-19 07:36:35.942556+00
+-[ RECORD 2 ]---------+------------------------------
+subid                 | 16394
+subname               | test1_3_sub
+pid                   | 5267
+relid                 | 
+received_lsn          | 0/1727750
+last_msg_send_time    | 2022-12-19 07:36:44.54191+00
+last_msg_receipt_time | 2022-12-19 07:36:44.54224+00
+latest_end_lsn        | 0/1727750
+latest_end_time       | 2022-12-19 07:36:44.54191+00
 
-> проверяю как изменилась нагрузка на CPU в проыентном в соотношении
+db_node3=# select * from test1;
+ id |               mesg               
+----+----------------------------------
+  1 | Строка в таблице test1 - 1
+  2 | 23eaa4f38c601d3577765a5fb2f518c4
+  3 | c6cdacad1b1b0c53f3c955ea4a050c97
+  4 | 01a24a155e8a1092b84b719c0dbbd3c4
+  5 | 10c8f45436a09940700ed3efc326d109
+  6 | c10a4ee0d2d9c91d7068eb1d5a313414
+  7 | 7391508cde849137c03f2fe42323068d
+  8 | b1885de55e33b94e72c663ec3ed2d34a
+  9 | db4daaab580f6e0c2dbbead914c5d78e
+ 10 | bdd2d42991ca8bd7bada6177b4a7fcf0
+(10 rows)
 
-![image](https://user-images.githubusercontent.com/85208391/206778639-9a3a98c8-5bc5-4483-81a9-5699d8dcdbe8.png)
+db_node3=# select * from test2;
+ id |               mesg               
+----+----------------------------------
+  1 | Строка в таблице test2 - 1
+  2 | 4136f38c64ddb3fbbd5a2bd675a5983a
+  3 | 84202ee7d867cecbe011663be7e79f4b
+  4 | b73b12a5c34e6eceae7f353f56d92636
+  5 | a02bf9c95ac8a03acfc3845676d619c5
+  6 | ba511bb780d03bf58ee157cf787eb1e3
+  7 | a869649b87235b5ee20180091a712313
+  8 | 73afb9e1b4ad6af28874433ad335ce05
+  9 | b5f3256279c1d8e415c44210d07e514d
+ 10 | b07fb90d4fb814ada388d611b1635a2f
+(10 rows)
+```
 
-> проверяю нагрузку на опертавную память
+## pg_basebackup
+* __Настрою на node3 периодический бэкап баз db_node1 и db_node2__
 
-![image](https://user-images.githubusercontent.com/85208391/206780789-dcdd9289-33ba-4ec5-beec-e0eba9113202.png)
+Внесём изменения в pg_hba.conf на pg-node1 и pg-node2, разрешающее репликационное соединение пользователю postgres (без требования ввода пароля) с узла pg-node3 для работы программы pg_basebackup:
 
-> фиксирую процесс с помощью команды top
+```
+host replication postgres 10.128.0.33/32 trust
+```
+> создаю директорию для бэкапов
+```
+damir@pg-node3:~$ sudo mkdir /home/backup
+damir@pg-node3:~$ sudo mkdir /home/backup/node1
+damir@pg-node3:~$ sudo mkdir /home/backup/node2
+```
+> теперь выполняю саму процедуру
+```
+damir@pg-node3:~$ date=$(date +'%d-%m-%Y'_'%H:%M:%S')
+damir@pg-node3:~$ sudo pg_basebackup -X stream -v -h 10.128.0.5 -U postgres -D /home/backup/node1/node1_$date
 
-![image](https://user-images.githubusercontent.com/85208391/206790920-8b9a5034-118c-4a38-b2dc-1024d6583e24.png)
+damir@pg-node3:~$ sudo pg_basebackup -X stream -v -h 10.128.0.34 -U postgres -D /home/backup/node1/node1_$date
+pg_basebackup: initiating base backup, waiting for checkpoint to complete
+pg_basebackup: checkpoint completed
+pg_basebackup: write-ahead log start point: 0/2000028 on timeline 1
+pg_basebackup: starting background WAL receiver
+pg_basebackup: created temporary replication slot "pg_basebackup_16862"
+pg_basebackup: write-ahead log end point: 0/2000138
+pg_basebackup: waiting for background process to finish streaming ...
+pg_basebackup: syncing data to disk ...
+pg_basebackup: renaming backup_manifest.tmp to backup_manifest
+pg_basebackup: base backup completed
 
+damir@pg-node3:~$ sudo pg_basebackup -X stream -v -h 10.128.0.35 -U postgres -D /home/backup/node2/node2_$date
+pg_basebackup: initiating base backup, waiting for checkpoint to complete
+pg_basebackup: checkpoint completed
+pg_basebackup: write-ahead log start point: 0/4000028 on timeline 1
+pg_basebackup: starting background WAL receiver
+pg_basebackup: created temporary replication slot "pg_basebackup_16866"
+pg_basebackup: write-ahead log end point: 0/4000100
+pg_basebackup: waiting for background process to finish streaming ...
+pg_basebackup: syncing data to disk ...
+pg_basebackup: renaming backup_manifest.tmp to backup_manifest
+pg_basebackup: base backup completed
+```
+> проверяю директори.
+```
+damir@pg-node3:~$ sudo ls -l /home/backup/node1/node1_19-12-2022_08\:07\:23/
+total 260
+-rw------- 1 root root      3 Dec 19 08:08 PG_VERSION
+-rw------- 1 root root    225 Dec 19 08:08 backup_label
+-rw------- 1 root root 180794 Dec 19 08:08 backup_manifest
+drwx------ 6 root root   4096 Dec 19 08:08 base
+drwx------ 2 root root   4096 Dec 19 08:08 global
+drwx------ 2 root root   4096 Dec 19 08:08 pg_commit_ts
+drwx------ 2 root root   4096 Dec 19 08:08 pg_dynshmem
+drwx------ 4 root root   4096 Dec 19 08:08 pg_logical
+drwx------ 4 root root   4096 Dec 19 08:08 pg_multixact
+drwx------ 2 root root   4096 Dec 19 08:08 pg_notify
+drwx------ 2 root root   4096 Dec 19 08:08 pg_replslot
+drwx------ 2 root root   4096 Dec 19 08:08 pg_serial
+drwx------ 2 root root   4096 Dec 19 08:08 pg_snapshots
+drwx------ 2 root root   4096 Dec 19 08:08 pg_stat
+drwx------ 2 root root   4096 Dec 19 08:08 pg_stat_tmp
+drwx------ 2 root root   4096 Dec 19 08:08 pg_subtrans
+drwx------ 2 root root   4096 Dec 19 08:08 pg_tblspc
+drwx------ 2 root root   4096 Dec 19 08:08 pg_twophase
+drwx------ 3 root root   4096 Dec 19 08:08 pg_wal
+drwx------ 2 root root   4096 Dec 19 08:08 pg_xact
+-rw------- 1 root root    110 Dec 19 08:08 postgresql.auto.conf
 
-> теперь саму транзакцию, я избавился от задержек связанных с обращением к диску и теперь tps стабилен, что наблюдаю на графиках
+damir@pg-node3:~$ sudo ls -l /home/backup/node2/node2_19-12-2022_08\:07\:23/
+total 260
+-rw------- 1 root root      3 Dec 19 08:08 PG_VERSION
+-rw------- 1 root root    225 Dec 19 08:08 backup_label
+-rw------- 1 root root 180630 Dec 19 08:08 backup_manifest
+drwx------ 6 root root   4096 Dec 19 08:08 base
+drwx------ 2 root root   4096 Dec 19 08:08 global
+drwx------ 2 root root   4096 Dec 19 08:08 pg_commit_ts
+drwx------ 2 root root   4096 Dec 19 08:08 pg_dynshmem
+drwx------ 4 root root   4096 Dec 19 08:08 pg_logical
+drwx------ 4 root root   4096 Dec 19 08:08 pg_multixact
+drwx------ 2 root root   4096 Dec 19 08:08 pg_notify
+drwx------ 2 root root   4096 Dec 19 08:08 pg_replslot
+drwx------ 2 root root   4096 Dec 19 08:08 pg_serial
+drwx------ 2 root root   4096 Dec 19 08:08 pg_snapshots
+drwx------ 2 root root   4096 Dec 19 08:08 pg_stat
+drwx------ 2 root root   4096 Dec 19 08:08 pg_stat_tmp
+drwx------ 2 root root   4096 Dec 19 08:08 pg_subtrans
+drwx------ 2 root root   4096 Dec 19 08:08 pg_tblspc
+drwx------ 2 root root   4096 Dec 19 08:08 pg_twophase
+drwx------ 3 root root   4096 Dec 19 08:08 pg_wal
+drwx------ 2 root root   4096 Dec 19 08:08 pg_xact
+-rw------- 1 root root    110 Dec 19 08:08 postgresql.auto.conf
+damir@pg-node3:~$ 
+```
+> как видно все сбэкапилось все нормально работает. В дополнении чтоб не выполнять это все в ручную просто можно создать скрипт который будет бэкапить данные, а старые данные старше к примеру 7 дней удалять и с помощью cron выполнять ежедневно в определенное время.
 
-![image](https://user-images.githubusercontent.com/85208391/206781187-e832486a-17bd-45a9-908f-b2b6f2cfe6d1.png)
+> теперь проблема сдесь заключается в то что невозможно настроить обычную master-slave репликацию. Нужно менять параметры на на pg-node3. в результате репликация ломается вся. Перестаёт работать pg-node3. И в этом случае настрою 4 ую ноду.
 
-| Название параметра	| Значение |	Описание 
-:--------------------- |:----------|:-----------:             
-| maintenance_work_mem |	100MB |	Неплохо бы устанавливать значение от 50 до 75% размера нашей самой большой таблицы или индекса. Так как наши таблицы размером 211MB, то установим 100MB
-| effective_cache_size |	7GB |	На выделенном сервере имеет смысл выставлять effective_cache_size в 2/3 от всей оперативной памяти
-| checkpoint_timeout |	1h |	Увеличим время сбрасывания данных на диск при проходе контрольной точки для уменьшения частого обращения к диску
-| max_wal_size |	2GB |	Тоже самое по размеру, до которого может вырастать WAL
-| synchronous_commit |	off |	Дает большой прирост скорости записи, но жертвуем надежностью
-| fsync |	off |	Дает большой прирост скорости записи, но жертвуем надежностью
-| full_page_writes |	off |	Установливается в off, если fsync off
-max_connections |	80	|Установим значение чуть больше количества подключений генерируемых sysbench
-| shared_buffers |	4892MB |	Установим 25% от общей оперативной памяти на сервере
-| work_mem |	50MB |	Можно брать 2–4% от доступной памяти. Для веб-приложений обычно устанавливают низкие значения work_mem, так как запросов обычно много, но они простые, обычно хватает от 512 до 2048KB. Мы установим 50MB, так как нам позволяет память
