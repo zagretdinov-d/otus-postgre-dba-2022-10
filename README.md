@@ -502,7 +502,38 @@ _Стартую кластер_
 ```
 sudo pg_ctlcluster 12 main2 start
 ```
-* __Проверяю результ настроек__
+>В процессе сам создался файл standby.signal в каталоге данных кластера резервного сервера что свидетельствует о том что сервер является slave.
+```
+damir@slave-node4:~$ sudo ls -l /var/lib/postgresql/14/main
+total 264
+-rw------- 1 postgres postgres      3 Dec 19 09:55 PG_VERSION
+-rw------- 1 postgres postgres    225 Dec 19 09:55 backup_label.old
+-rw------- 1 postgres postgres 180145 Dec 19 09:55 backup_manifest
+drwx------ 6 postgres postgres   4096 Dec 19 09:55 base
+drwx------ 2 postgres postgres   4096 Dec 19 10:09 global
+drwx------ 2 postgres postgres   4096 Dec 19 09:55 pg_commit_ts
+drwx------ 2 postgres postgres   4096 Dec 19 09:55 pg_dynshmem
+drwx------ 4 postgres postgres   4096 Dec 19 16:15 pg_logical
+drwx------ 4 postgres postgres   4096 Dec 19 09:55 pg_multixact
+drwx------ 2 postgres postgres   4096 Dec 19 09:55 pg_notify
+drwx------ 2 postgres postgres   4096 Dec 19 09:55 pg_replslot
+drwx------ 2 postgres postgres   4096 Dec 19 09:55 pg_serial
+drwx------ 2 postgres postgres   4096 Dec 19 09:55 pg_snapshots
+drwx------ 2 postgres postgres   4096 Dec 19 10:08 pg_stat
+drwx------ 2 postgres postgres   4096 Dec 19 09:55 pg_stat_tmp
+drwx------ 2 postgres postgres   4096 Dec 19 10:02 pg_subtrans
+drwx------ 2 postgres postgres   4096 Dec 19 09:55 pg_tblspc
+drwx------ 2 postgres postgres   4096 Dec 19 09:55 pg_twophase
+drwx------ 3 postgres postgres   4096 Dec 19 10:02 pg_wal
+drwx------ 2 postgres postgres   4096 Dec 19 09:55 pg_xact
+-rw------- 1 postgres postgres    373 Dec 19 09:55 postgresql.auto.conf
+-rw------- 1 postgres postgres    130 Dec 19 10:08 postmaster.opts
+-rw------- 1 postgres postgres    100 Dec 19 10:08 postmaster.pid
+-rw------- 1 postgres postgres      0 Dec 19 09:55 standby.signal
+damir@slave-node4:~$ 
+```
+
+* __Демонстрирую результ работы__
 
 ![image](https://user-images.githubusercontent.com/85208391/208469678-5b67e989-8145-4833-b353-85bb8872185d.png)
 
@@ -511,7 +542,7 @@ sudo pg_ctlcluster 12 main2 start
 ![image](https://user-images.githubusercontent.com/85208391/208470390-7f04e535-1069-425f-a341-d52f372930a8.png)
 
 
-
+Все процессы я выполнял на pg_node1 как видно все данные успешно копируются и реплифцируются.
 
 
 
