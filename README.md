@@ -191,6 +191,7 @@ db_node2-# a.id = b.id;
   1 | Строка в таблице test1 - 1 |  1 | Строка в таблице test2 - 1
 (1 row)
 ```
+![изображение](https://user-images.githubusercontent.com/85208391/208361270-196d4430-42ab-44cc-9051-b37ecb2775e5.png)
 
 
 
