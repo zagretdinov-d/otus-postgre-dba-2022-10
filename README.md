@@ -504,4 +504,15 @@ sudo pg_ctlcluster 12 main2 start
 ```
 * __Проверяю результ настроек__
 
+![image](https://user-images.githubusercontent.com/85208391/208469678-5b67e989-8145-4833-b353-85bb8872185d.png)
+
+![image](https://user-images.githubusercontent.com/85208391/208470157-12fdca96-30c3-4b98-9d93-315a93800b78.png)
+
+![image](https://user-images.githubusercontent.com/85208391/208470390-7f04e535-1069-425f-a341-d52f372930a8.png)
+
+
+
+
+
+
 
