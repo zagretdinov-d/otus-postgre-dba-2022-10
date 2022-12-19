@@ -17,11 +17,12 @@
 * pg-node3 (Ubuntu 20.04, PostgreSQL 14)
 * slave-node4 (Ubuntu 20.04, PostgreSQL 14)
 
-> Для развертывания инстанций google облаке применю такой инструмент terrafom. Если в крации в созданном файле main.tf добавленны параметры для создания 4-х машин и запск скрипта pg_install с установкой postgresql-14.
+> Для развертывания инстанций в google облаке применю такой инструмент terrafom. Если в крации в созданном файле main.tf добавленны параметры для создания 4-х машин и запск скрипта pg_install с установкой postgresql-14.
 
-- __Настройка логической репликации. Создаю БД и таблицу в nodedb1 и nodedb2:__
+- __Настройка логической репликации. Создание БД и таблиц в pg-node1 и pg-node2:__
   - ___pg-node1___
-  ``` amir@pg-node1:~$ sudo -u postgres psql
+  ``` 
+  damir@pg-node1:~$ sudo -u postgres psql
   psql (14.6 (Ubuntu 14.6-1.pgdg20.04+1))
   Type "help" for help.
 
@@ -29,9 +30,176 @@
   ALTER SYSTEM
   postgres=#
   damir@pg-node1:~$ sudo pg_ctlcluster 14 main restart
+  create database db_node1;
+  postgres=# \c db_node1
+  You are now connected to database "db_node1" as user "postgres".
+  db_node1=#
+  db_node1=# create table test1(id integer, mesg varchar(50));
+  CREATE TABLE
+  db_node1=# create table test2(id integer, mesg varchar(50));
+  CREATE TABLE
+  db_node1=#
+  ```
+  - ___pg-node2___
+  ```
+  damir@pg-node2:~$ sudo -u postgres psql
+  psql (14.6 (Ubuntu 14.6-1.pgdg20.04+1))
+  Type "help" for help.
+
+  postgres=# alter system set wal_level = logical;
+  ALTER SYSTEM
+  postgres=# exir
+  postgres-# \q
+  damir@pg-node2:~$ sudo pg_ctlcluster 14 main restart
+  damir@pg-node2:~$ sudo -u postgres psql
+  psql (14.6 (Ubuntu 14.6-1.pgdg20.04+1))
+  Type "help" for help.
+
+  postgres=# create database db_node2;
+  CREATE DATABASE
+  postgres=# \c db_node2
+  You are now connected to database "db_node2" as user "postgres".
+  db_node2=# create table test2(id integer, mesg varchar(50));
+  CREATE TABLE
+  db_node2=# create table test1(id integer, mesg varchar(50));
+  CREATE TABLE
+  ```
+
+- __Создаю публикацию таблицы test и подписываемся на публикацию таблицы test2 с ВМ №2:__
+
+  - ___pg-node1___
+    
+   > публикую таблицу test1:
+
+   ```
+    db_node1=# CREATE PUBLICATION test1_pub FOR TABLE test1;
+    CREATE PUBLICATION
+    
+    // Проверяю
+    db_node1=# \dRp+
+                                   Publication test1_pub
+      Owner   | All tables | Inserts | Updates | Deletes | Truncates | Via root 
+    ----------+------------+---------+---------+---------+-----------+----------
+     postgres | f          | t       | t       | t       | t         | f
+    Tables:
+        "public.test1"
+    
+    // Добавляю пароль для логической репликации
+    db_node1=# \password
+    Enter new password for user "postgres": 
+    Enter it again: 
+    db_node1=# 
+   ```
+  - ___pg-node2___
+
+  > Выполню тоже самое с таблицей test2
+  ```
+  db_node2=# CREATE PUBLICATION test2_pub FOR TABLE test2;
+  CREATE PUBLICATION
+  db_node2=# \dRp+
+                             Publication test2_pub
+    Owner   | All tables | Inserts | Updates | Deletes | Truncates | Via root 
+  ----------+------------+---------+---------+---------+-----------+----------
+   postgres | f          | t       | t       | t       | t         | f
+  Tables:
+      "public.test2"
+
+  db_node2=# \password
+  Enter new password for user "postgres": 
+  Enter it again:
+  ```
+
+- __Оформляю подписку с ноды pg-node1 на таблицу test2 на ноде pg-node2:__
   
+  > изменю параметры postgres.conf и разрешу удаленное подключение 
+
+  ```
+  sudo vi /etc/postgresql/14/main/postgresql.conf
+  listen_addresses = '*'
+
+  sudo vi /etc/postgresql/14/main/pg_hba.conf
+  host all all 0.0.0.0/0 md5
+  host all all ::/0 md5
+  ```
+  > Подписываю
+  ```
+  db_node1=# CREATE SUBSCRIPTION test2_sub CONNECTION 'host=10.128.0.34 port=5432 user=postgres password=devops123 dbname=db_node2' PUBLICATION test2_pub WITH (copy_data = false);
+  NOTICE:  created replication slot "test2_sub" on publisher
+  CREATE SUBSCRIPTION
+  db_node1=# 
+  ```
+
+  > Проверяю
+  ```
+  db_node1=# SELECT * FROM pg_stat_subscription \gx
+  -[ RECORD 1 ]---------+------------------------------
+  subid                 | 16396
+  subname               | test2_sub
+  pid                   | 15110
+  relid                 | 
+  received_lsn          | 0/1715D90
+  last_msg_send_time    | 2022-12-19 05:45:58.924928+00
+  last_msg_receipt_time | 2022-12-19 05:45:58.925811+00
+  latest_end_lsn        | 0/1715D90
+  latest_end_time       | 2022-12-19 05:45:58.924928+00
+  ```
+
+- __Оформляю подписку с ноды pg-node2 на таблицу test1 ноды pg-node1:__
 
 ```
+db_node2=# CREATE SUBSCRIPTION test1_sub CONNECTION 'host=10.128.0.35 port=5432 user=postgres password=devops123 dbname=db_node1' PUBLICATION test1_pub WITH (copy_data = false);
+NOTICE:  created replication slot "test1_sub" on publisher
+CREATE SUBSCRIPTION
+db_node2=# SELECT * FROM pg_stat_subscription \gx
+-[ RECORD 1 ]---------+------------------------------
+subid                 | 16393
+subname               | test1_sub
+pid                   | 2594
+relid                 | 
+received_lsn          | 0/1717430
+last_msg_send_time    | 2022-12-19 05:59:07.0889+00
+last_msg_receipt_time | 2022-12-19 05:59:07.089898+00
+latest_end_lsn        | 0/1717430
+latest_end_time       | 2022-12-19 05:59:07.0889+00
+```
+> на каждом узле вставляю по одной строке в таблицу.
+```
+db_node1=# insert into test1 values (1, 'Строка в таблице test1 - 1');
+INSERT 0 1
+```
+
+```
+db_node2=# insert into test2 values (1, 'Строка в таблице test2 - 1');
+INSERT 0 1
+```
+
+> Выполняю запросы на двух таблицах и проверяю идентичность.
+```
+db_node1=# select * from test1 a, test2 b
+db_node1-# where
+db_node1-# a.id = b.id;
+ id |            mesg            | id |            mesg            
+----+----------------------------+----+----------------------------
+  1 | Строка в таблице test1 - 1 |  1 | Строка в таблице test2 - 1
+(1 row)
+
+db_node2=# select * from test1 a, test2 b
+db_node2-# where
+db_node2-# a.id = b.id;
+ id |            mesg            | id |            mesg            
+----+----------------------------+----+----------------------------
+  1 | Строка в таблице test1 - 1 |  1 | Строка в таблице test2 - 1
+(1 row)
+```
+
+
+
+
+
+
+
+
+
 
 
 __создаю GCE инстанс типа e2-medium__
