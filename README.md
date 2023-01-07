@@ -55,7 +55,7 @@ ___Навыки:___
 
 * __Решение__
 
-  - Создаю базу данных с таблицей orders и заполняю её данными:
+  - ___Создаю базу данных с таблицей orders и заполняю её данными:___
   ```
   postgres=# create database db_ind;
   CREATE DATABASE
@@ -72,7 +72,7 @@ ___Навыки:___
   db_ind-# from generate_series(1, 5000000);
   INSERT 0 5000000
   ```
-  - результат команды explain,
+  - ___результат команды explain___
 
   ```
   db_ind=# explain
@@ -87,7 +87,7 @@ ___Навыки:___
   (5 rows)
   ```
 
-  - проверяю размер таблицы
+  - ___проверяю размер таблицы___
   ```
   db_ind=# select pg_size_pretty(pg_table_size('orders'));
   pg_size_pretty 
@@ -98,12 +98,12 @@ ___Навыки:___
   ```
   
 * __Реализовация индекса для полнотекстового поиска__
-    * создаю индекс по колонке id
+    * ___создаю индекс по колонке id___
   ```
   db_ind=# create index idx_ord_id on orders(id);
   CREATE INDEX
   ```
-  - проверяю план запроса - использования индекса
+  - ___проверяю план запроса - использования индекса___
   ```
   db_ind=# explain
   db_ind-# select * from orders where id<1000000;
@@ -116,7 +116,7 @@ ___Навыки:___
   > Используется оператор Index Scan предназначен для сканирования всех записей некластеризованного индекса.
   вообщеи проверил индекс для таблицы orders, тоже успешно работает
 
-  - размер индекса
+  - ___размер индекса___
   
   ```
   db_ind=# select pg_size_pretty(pg_table_size('idx_ord_id'));
@@ -126,7 +126,7 @@ ___Навыки:___
   (1 row)
   ```
 * __Создание индекса на несколько полей__
-  - выполняю запрос 
+  - ___выполняю запрос___ 
   ```
   explain
   select order_date, status
@@ -139,17 +139,14 @@ ___Навыки:___
            Filter: ((order_date >= '2022-01-01'::date) AND (order_date <= '2022-02-01'::date) AND (status = 'placed'::text))
   (4 rows)
   ```
-
-
-
   >  Используется Seq scan последовательный перебор всех строк базы в поисках конкретного значения.
 
-   - создаю индекс на несколько полей
+   - ___создаю индекс на несколько полей___
    ```
   db_ind=# create index idx_ord_order_date_status on orders(order_date, status);
   CREATE INDEX
   ```
-  - выполняю запрос
+  - ___выполняю запрос___
   ```
   explain
   select order_date, status
@@ -164,7 +161,7 @@ ___Навыки:___
   (2 rows)
   ```
 
- > использовано индексное сканирование Index Only Scan.
+   > использовано индексное сканирование Index Only Scan.
 
 * __Описание комментарии к каждому из индексов__
   
@@ -181,7 +178,7 @@ ___Навыки:___
 
 * __Решение__
 
-  - создаю еще одну таблицу clients и наполняю ее значениями от 1 до 50
+  - ___создаю еще одну таблицу clients и наполняю ее значениями от 1 до 50___
   ```
   db_ind=# create table clients (user_id int, passwd text);
   CREATE TABLE
@@ -190,7 +187,7 @@ ___Навыки:___
   INSERT 0 50
   db_ind=# 
   ```
-  - количество строк
+  - ___количество строк___
   ```
   db_ind=# select count(*) from clients;
    count 
@@ -199,13 +196,13 @@ ___Навыки:___
   (1 row)
 
   ``` 
-  - создаю индексы по полям user_id для каждой из таблиц
+  - ___создаю индексы по полям user_id для каждой из таблиц___
   
   ```
   create unique index idx_cust_uid on clients(user_id);
   create index idx_ord_uid on orders(user_id);
   ```
-  - прямое соединение двух или более таблиц, выполняю запрос при объединении двух таблиц по условию clients.user_id=orders.user_id
+  - ___прямое соединение двух или более таблиц, выполняю запрос при объединении двух таблиц по условию clients.user_id=orders.user_id___
   ```
   db_ind=# explain analyze
   select a.user_id, b.order_date from clients a inner join orders b on a.user_id=b.user_id;
@@ -227,7 +224,7 @@ ___Навыки:___
   ```
   > По данному запросу используется алгоритм соединения Hash Join.
 
-  - Левостороннее соединение двух таблиц, выполняю запрос при объединении двух таблиц по условию clients.user_id=orders.user_id.
+  - ___Левостороннее соединение двух таблиц, выполняю запрос при объединении двух таблиц по условию clients.user_id=orders.user_id.___
   ```
   db_ind=# explain analyze
   db_ind-# select a.user_id, b.user_id from clients a left join orders b ON a.user_id=b.user_id;
@@ -250,4 +247,103 @@ ___Навыки:___
 
    > В запросе используется алгоритм Merge Join данный способ соединение физически.
 
-   - Реализация кросс соединения.
+   - ___Реализация кросс соединения. Соединяю таблицу orders и clients.___
+  
+  ```
+  db_ind=# explain
+  db_ind-#   select a.user_id, b.user_id from clients a cross join orders b;
+                                    QUERY PLAN                                   
+  -------------------------------------------------------------------------------
+  Nested Loop  (cost=0.00..3215056.62 rows=250000000 width=8)
+     ->  Seq Scan on orders b  (cost=0.00..90055.00 rows=5000000 width=4)
+     ->  Materialize  (cost=0.00..1.75 rows=50 width=4)
+           ->  Seq Scan on clients a  (cost=0.00..1.50 rows=50 width=4)
+   JIT:
+     Functions: 5
+     Options: Inlining true, Optimization true, Expressions true, Deforming true
+  (7 rows)
+  ```
+  - ___выполняю explain analyze___
+  ```
+  explain analyze
+  select a.user_id, b.user_id from clients a cross join orders b;
+  QUERY PLAN                                                        
+  --------------------------------------------------------------------------------------------------------------------------
+   Nested Loop  (cost=0.00..3215056.62 rows=250000000 width=8) (actual time=40.194..34097.045 rows=250000000 loops=1)
+     ->  Seq Scan on orders b  (cost=0.00..90055.00 rows=5000000 width=4) (actual time=0.299..532.526 rows=5000000 loops=1)
+     ->  Materialize  (cost=0.00..1.75 rows=50 width=4) (actual time=0.000..0.002 rows=50 loops=5000000)
+           ->  Seq Scan on clients a  (cost=0.00..1.50 rows=50 width=4) (actual time=39.878..39.887 rows=50 loops=1)
+   Planning Time: 0.113 ms
+   JIT:
+     Functions: 5
+     Options: Inlining true, Optimization true, Expressions true, Deforming true
+     Timing: Generation 0.645 ms, Inlining 1.999 ms, Optimization 25.809 ms, Emission 11.882 ms, Total 40.334 ms
+   Execution Time: 42768.209 ms
+  (10 rows)
+  ```
+  > Используется алгоритм Nested Loop.
+    Cross Join или перекрестное соединение создает набор строк, где каждая строка из одной таблицы соединяется с каждой строкой из второй таблицы. 
+
+  - __Реализация полного соединения.__ 
+  ```
+  explain analyze
+  select a.user_id, b.user_id from clients a full join orders b ON a.user_id=b.user_id WHERE a.user_id is null or b.user_id is null;
+  
+    QUERY PLAN                                                        
+  --------------------------------------------------------------------------------------------------------------------------
+   Hash Full Join  (cost=2.12..103965.58 rows=25000 width=8) (actual time=19.198..1294.934 rows=1428494 loops=1)
+     Hash Cond: (b.user_id = a.user_id)
+     Filter: ((a.user_id IS NULL) OR (b.user_id IS NULL))
+     Rows Removed by Filter: 3571506
+     ->  Seq Scan on orders b  (cost=0.00..90055.00 rows=5000000 width=4) (actual time=0.171..468.490 rows=5000000 loops=1)
+     ->  Hash  (cost=1.50..1.50 rows=50 width=4) (actual time=19.002..19.004 rows=50 loops=1)
+           Buckets: 1024  Batches: 1  Memory Usage: 10kB
+           ->  Seq Scan on clients a  (cost=0.00..1.50  rows=50 width=4) (actual time=18.955..18.966 rows=50 loops=1)
+   Planning Time: 1.348 ms
+   JIT:
+     Functions: 14
+     Options: Inlining false, Optimization false, Expressions true, Deforming true
+     Timing: Generation 3.457 ms, Inlining 0.000 ms, Optimization 2.780 ms, Emission 15.789 ms, Total 22.026 ms
+   Execution Time: 1352.480 ms
+  ```
+  > При выполнения запроса используется алгоритм Merge Full Join
+
+  - ___Реализация запросов, в котором будут использованы
+разные типы соединений___
+  
+  ```
+  explain analyze
+  select a.user_id from clients a inner join clients b on a.user_id=b.user_id
+  left join orders c ON a.user_id=c.user_id;
+                                                                      QUERY    PLAN                                                                  
+  ---------------------------------------------------------------------------------------------------------------------------------------------
+   Nested Loop Left Join  (cost=2.56..105721.02 rows=3521127 width=4) (actual time=15.309..729.013 rows=3571506 loops=1)
+     ->  Hash Join  (cost=2.12..3.77 rows=50 width=4) (actual time=14.680..14.955 rows=50 loops=1)
+           Hash Cond: (a.user_id = b.user_id)
+           ->  Seq Scan on clients a  (cost=0.00..1.50 rows=50 width=4) (actual time=0.161..0.243 rows=50 loops=1)
+           ->  Hash  (cost=1.50..1.50 rows=50 width=4) (actual time=14.497..14.499 rows=50 loops=1)
+                 Buckets: 1024  Batches: 1  Memory Usage: 10kB
+                 ->  Seq Scan on clients b  (cost=0.00..1.50 rows=50 width=4) (actual time=14.468..14.477 rows=50 loops=1)
+     ->  Index Only Scan using idx_ord_uid on orders c  (cost=0.43..1410.11 rows=70423 width=4) (actual time=0.039..8.485 rows=71430 loops=50)
+           Index Cond: (user_id = a.user_id)
+           Heap Fetches: 0
+   Planning Time: 0.513 ms
+   JIT:
+     Functions: 13
+     Options: Inlining false, Optimization false, Expressions true, Deforming true
+     Timing: Generation 3.488 ms, Inlining 0.000 ms,   Optimization 1.826 ms, Emission 12.090 ms, Total 17.404 ms
+   Execution Time: 856.855 ms
+  (16 rows)
+  ```
+  > Здесь была объедина таблица clients и левосторонним соеднинением с таблицей orders.
+
+  - ___Запросы в общих чертах___
+  > LEFT JOIN выводит все значения из левой таблицы и пересечения значений (по ключу) с правой.
+
+  > Запрос с right join наоборот, вернёт все записи из правой таблицы и только те записи из левой, которые имеют общий ключ:
+
+  > Запрос inner join - это внутреннее объединение (пересечение) значений, которые есть в обоих объединяемых таблицах. 
+
+   > Запрос cross join выведет каждую запись левой таблицы соединённой с каждой записью правой (не зависимо от значения ключа).
+
+   > Запрос full join вернёт строки с общими ключами в обоих таблицах, а также все строки обоих таблиц, где нет соответствия. 
