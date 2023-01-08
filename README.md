@@ -353,4 +353,21 @@ ___Навыки:___
    ![изображение](https://user-images.githubusercontent.com/85208391/211150572-c74dcaa2-4317-4951-b198-0ee5d656de75.png)
 
    
-   
+* __Задание со звездочкой*__
+
+   Данные метрики я использую для мониторинга с помощью zabbix.
+Это всеми известные метрики по запросу я выбираю что мне нужно мониторить у себя.
+
+```
+SELECT datname,xact_commit,xact_rollback,temp_bytes,tup_updated, blks_read, conflicts, temp_files, blks_hit, deadlocks FROM pg_stat_database where datname is not null;
+```
+> размер баз данных и суммарная статистика по всем базам — pg_stat_database
+```
+SELECT client_addr, usename, datname, state, count(*) FROM pg_stat_activity  GROUP BY 1,2,3,4 ORDER BY 5 DESC;
+```
+
+```
+SELECT coalesce(extract(epoch FROM max(CASE WHEN state = 'idle in transaction' THEN age(now(), query_start) END)), 0) AS idle, coalesce(extract(epoch FROM max(CASE WHEN state <> 'idle in transaction' AND state <> 'idle' THEN age(now(), query_start) END)), 0) AS active, coalesce(extract(epoch FROM max(CASE WHEN wait_event IS NOT NULL AND state='active' THEN age(now(), query_start) END)), 0) AS waiting, (SELECT coalesce(extract(epoch FROM max(age(now(), prepared))), 0) FROM pg_prepared_xacts) AS prepared, max(age(backend_xmin)) AS xmin_age
+FROM pg_stat_activity WHERE backend_type='client backend';
+```
+>  информация по клиентским соединениям и времени выполнения запросов/транзакций — pg_stat_activity.
