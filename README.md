@@ -109,3 +109,4 @@ Ver Cluster Port Status Owner    Data directory              Log file
     demo=# CREATE TABLE flights_default partition of flights_demo default;
     CREATE TABLE
     ```
+![image](https://user-images.githubusercontent.com/85208391/211228517-ce854602-cf83-443b-b3e0-3c3709473bae.png)
