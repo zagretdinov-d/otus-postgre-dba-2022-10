@@ -8,7 +8,7 @@
 
 * Для выполнения поставленных целей разворачиваю GCE инстанс типа e2-medium
 ```
-damir@Damir:~$ gcloud beta compute instances create postgres- \
+damir@Damir:~$ gcloud beta compute instances create postgres-1 \
 --machine-type=e2-medium \
 --image-family ubuntu-2004-lts \
 --image-project=ubuntu-os-cloud \
@@ -19,9 +19,10 @@ damir@Damir:~$ gcloud beta compute instances create postgres- \
 ```
 В результате получаю.
 ```
-Created [https://www.googleapis.com/compute/beta/projects/pg-devops1988-10/zones/europe-central2-c/instances/pg-host].
-NAME     ZONE               MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP     STATUS
-pg-host  europe-central2-c  e2-medium                  10.186.0.8   34.116.210.208  RUNNING
+Created [https://www.googleapis.com/compute/beta/projects/pg-devops1988-10-375513/zones/us-central1-a/instances/postgres-1].
+NAME        ZONE           MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP    STATUS
+postgres-1  us-central1-a  e2-medium                  10.128.0.2   35.202.233.86  RUNNING
+
 ```
 Подключаюсь к VM и устанавливаем Postgres 14 с дефолтными настройками
 
