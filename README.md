@@ -39,4 +39,10 @@ Ver Cluster Port Status Owner    Data directory              Log file
 14  main    5432 online postgres /var/lib/postgresql/14/main /var/log/postgresql/postgresql-14-main.log
 ```
 * __Cоздаю таблицы в соответствии с файлом скаченным по ссылке и заполнил данными__
+
+
+![image](https://user-images.githubusercontent.com/85208391/213932245-2b6435ea-bcb2-4714-963d-c891424f6f86.png)
+
+
+
  
