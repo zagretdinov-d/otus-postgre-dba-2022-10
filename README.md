@@ -1,8 +1,8 @@
-# Lesson 15
-### Тема: Секционирование таблицы
+# Lesson 17
+### Тема: Триггеры, поддержка заполнения витрин
 
 #### Цель:
-* __научиться секционировать таблицы.__
+* __Создать триггер для поддержки витрины в актуальном состоянии.__
 
 ### Решение:
 
@@ -37,22 +37,5 @@ damir@pg-host:~$ pg_lsclusters
 Ver Cluster Port Status Owner    Data directory              Log file
 14  main    5432 online postgres /var/lib/postgresql/14/main /var/log/postgresql/postgresql-14-main.log
 ```
-* __Секционирование большой таблицы из демо базы flights.__
-  - Скачиваю архив тестовой базы данных с помощью wget c сайта https://postgrespro.com/education/demodb
-  
-  ```
-    damir@pg-host:~$ wget https://edu.postgrespro.com/demo-big-en.zip
-  --2023-01-08 03:02:34--  https://edu.postgrespro.com/demo-big-en.zip
-  Resolving edu.postgrespro.com (edu.postgrespro.com)... 213.171.56.196
-  Connecting to edu.postgrespro.com (edu.postgrespro.com)|213.171.56.196|:443... connected.
-  HTTP request sent, awaiting response... 200 OK
-  Length: 243203220 (232M) [application/zip]
-  Saving to: ‘demo-big-en.zip’
-
-  demo-big-en.zip                                             100%[=========================================================================================================================================>] 231.94M  57.1MB/s    in 4.4s    
-
-  2023-01-08 03:02:39 (52.7 MB/s) - ‘demo-big-en.zip’ saved [243203220/243203220]
-  ```
-* Распаковываю архив с помощью unzip.
-
-```
+* __Cоздаю таблицы в соответствии с файлом скаченным по ссылке и заполнил данными__
+ 
