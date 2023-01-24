@@ -1,12 +1,12 @@
 # Lesson 17
-### Тема: Триггеры, поддержка заполнения витрин
+### Тема: Триггеры, поддержка заполнения витрин.
 
 #### Цель:
 * __Создать триггер для поддержки витрины в актуальном состоянии.__
 
 ### Решение:
 
-* Для выполнения поставленных целей разворачиваю GCE инстанс типа e2-medium
+* Для выполнения поставленных целей разворачиваю GCE инстанс типа e2-medium.
 ```
 damir@Damir:~$ gcloud beta compute instances create postgres-1 \
 --machine-type=e2-medium \
@@ -24,7 +24,7 @@ NAME        ZONE           MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP  
 postgres-1  us-central1-a  e2-medium                  10.128.0.2   35.202.233.86  RUNNING
 
 ```
-Подключаюсь к VM и устанавливаем Postgres 14 с дефолтными настройками
+Подключаюсь к VM и устанавливаем Postgres 14 с дефолтными настройками.
 
 ```
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
@@ -32,7 +32,7 @@ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-
 sudo apt-get update
 sudo apt-get -y install postgresql-14
 ```
-проверяю статус postgre
+Проверяю статус postgres.
 ```
 damir@pg-host:~$ pg_lsclusters
 Ver Cluster Port Status Owner    Data directory              Log file
