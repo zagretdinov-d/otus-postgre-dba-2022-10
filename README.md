@@ -111,7 +111,7 @@ VOLATILE
 SET search_path = pract_functions, public
 COST 50;
 ```
-* Добавляю триггер.
+* добавляю триггер.
 ```
 CREATE TRIGGER tr_delete_sales
 AFTER DELETE
@@ -150,7 +150,7 @@ VOLATILE
 SET search_path = pract_functions, public
 COST 50;
 ```
-* Добавляю триггер.
+* добавляю триггер.
 ```
 CREATE TRIGGER tr_update_sales
 AFTER UPDATE
