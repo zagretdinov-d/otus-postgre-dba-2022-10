@@ -40,6 +40,7 @@ Ver Cluster Port Status Owner    Data directory              Log file
 ```
 * __Cоздаю таблицы в соответствии с файлом скаченным по ссылке и заполнил данными__
 
+> Для работы с триггерами и функциями исользую DBeaver.
 
 ![image](https://user-images.githubusercontent.com/85208391/213932245-2b6435ea-bcb2-4714-963d-c891424f6f86.png)
 
@@ -78,7 +79,7 @@ VOLATILE
 SET search_path = pract_functions, public
 COST 50;
 ```
-* теперь создаю сам тригер
+* теперь создаю сам триггер
 ```
 CREATE TRIGGER tr_insert_sales
 AFTER INSERT
@@ -86,7 +87,7 @@ ON sales
 FOR EACH ROW
 EXECUTE PROCEDURE ft_insert_sales();
 ```
-> Создаю тригеррную функцию удаление записи текущей стоймости у которой значение меньше либо равна 0 
+> Создаю триггерную функцию удаление записи текущей стоймости у которой значение меньше либо равна 0 
 ```
 CREATE or replace function ft_delete_sales()
 RETURNS trigger
@@ -110,7 +111,7 @@ VOLATILE
 SET search_path = pract_functions, public
 COST 50;
 ```
-Добавиляю триггер.
+* Добавляю триггер.
 ```
 CREATE TRIGGER tr_delete_sales
 AFTER DELETE
@@ -149,7 +150,7 @@ VOLATILE
 SET search_path = pract_functions, public
 COST 50;
 ```
-* тригер
+* Добавляю триггер.
 ```
 CREATE TRIGGER tr_update_sales
 AFTER UPDATE
