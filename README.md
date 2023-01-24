@@ -45,5 +45,22 @@ Ver Cluster Port Status Owner    Data directory              Log file
 
 ![image](https://user-images.githubusercontent.com/85208391/214259157-579f6fe3-415f-4898-9c8d-c93317a67ed5.png)
 
+-- Создать триггер (на таблице sales) для поддержки.
 
+
+
+
+-- Подсказка: не забыть, что кроме INSERT есть еще UPDATE и DELETE
+Перед  созданием триггеров заполнил её уже имеющимися записями
+
+INSERT INTO good_sum_mart SELECT G.good_name, sum(G.good_price * S.sales_qty) AS sum_sale
+  FROM goods G
+  INNER JOIN sales S ON S.good_id = G.goods_id
+  GROUP BY G.good_name;
+
+
+
+
+-- Чем такая схема (витрина+триггер) предпочтительнее отчета, создаваемого "по требованию" (кроме производительности)?
+-- Подсказка: В реальной жизни возможны изменения цен.
  
