@@ -43,6 +43,7 @@ Ver Cluster Port Status Owner    Data directory              Log file
 
 ![image](https://user-images.githubusercontent.com/85208391/213932245-2b6435ea-bcb2-4714-963d-c891424f6f86.png)
 
+![image](https://user-images.githubusercontent.com/85208391/214259157-579f6fe3-415f-4898-9c8d-c93317a67ed5.png)
 
 
  
