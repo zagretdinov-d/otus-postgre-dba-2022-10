@@ -16,7 +16,7 @@ psql (12.13)
 Введите "help", чтобы получить справку.
 postgres=# create database test;
 CREATE DATABASE
-postgres=# CREATE USER devops WITH PASSWORD '51324ASdfQWer';
+postgres=# CREATE USER devops WITH PASSWORD '*****';
 CREATE ROLE
 postgres=# GRANT ALL PRIVILEGES ON DATABASE "test" to devops;
 GRANT
