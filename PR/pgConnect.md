@@ -11,8 +11,9 @@
 Пароль пользователя сервера БД: ******
 ```
 ```
-[root@pg-node1 ~]# sudo -i -u postgres psql
-psql (12.13)
+damir@dev:~$ psql -U postgres -h 35.232.96.109 -p 9001 -d postgres -W
+Пароль: 
+psql (12.13 (Ubuntu 12.13-1.pgdg20.04+1))
 Введите "help", чтобы получить справку.
 postgres=# create database test;
 CREATE DATABASE

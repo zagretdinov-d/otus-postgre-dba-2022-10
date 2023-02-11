@@ -13,4 +13,5 @@
 ### [5. Мониторинг с помощью zabbix.](PR/monitoring.md)
 
 ### [6. Резервное копирование.](PR/backupSettings.md)
+### [7. Тестовая нагрузка.](PR/testing.md)
 ---
